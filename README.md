@@ -44,4 +44,4 @@
     ServerName baidu.com
     </VirtualHost>
 
-> 注：其中上文中siteroot为程序目录所在地址
+> 注：其中上文中siteroot为程序目录所在地址，QQ交流群：574199144
