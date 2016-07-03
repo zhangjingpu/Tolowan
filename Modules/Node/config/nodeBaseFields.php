@@ -1,0 +1,197 @@
+<?php
+$settings = array(
+    'formId' => 'adminNodeEditForm',
+    'form' => array(
+        'action' => '',
+        'method' => 'post',
+        'ajax-submit' => '#main',
+        'accept-charset' => 'utf-8',
+        'role' => 'form',
+        'id' => 'adminNodeEditForm',
+    ),
+    'id' => array(
+        'primaryKey' => true,
+        'label' => 'id',
+    ),
+    'changed' => array(
+        'field' => 'date',
+        'widget' => 'Date',
+        'access' => array(
+            'addForm' => false,
+            'editForm' => false,
+            'baseField' => true,
+        ),
+        'length' => 10,
+        'required' => false,
+        'description' => '',
+        'error' => '',
+        'label' => '最近更改',
+        'attributes' => array(
+            'class' => 'form-control',
+        ),
+    ),
+    'created' => array(
+        'field' => 'date',
+        'widget' => 'Date',
+        'access' => array(
+            'addForm' => true,
+            'editForm' => true,
+            'baseField' => true,
+        ),
+        'length' => 10,
+        'required' => false,
+        'label' => '创建',
+        'description' => '',
+        'error' => '',
+        'attributes' => array(
+            'class' => 'form-control',
+        ),
+    ),
+    'contentModel' => array(
+        'field' => 'string',
+        'access' => array(
+            'addForm' => false,
+            'editForm' => false,
+            'baseField' => true,
+        ),
+        'minLength' => 2,
+        'maxLength' => 20,
+        'required' => false,
+        'label' => '内容类型',
+        'description' => '',
+        'error' => '',
+        'attributes' => array(
+            'class' => 'form-control',
+        ),
+    ),
+    'uid' => array(
+        'field' => 'number',
+        'widget' => 'Text',
+        'entity' => 'user',
+        'access' => array(
+            'addForm' => true,
+            'editForm' => true,
+        ),
+        'min' => 1,
+        'minLength' => 1,
+        'maxLength' => 11,
+        'required' => false,
+        'baseField' => true,
+        'label' => '用户',
+        'description' => '',
+        'error' => '',
+        'attributes' => array(
+            'class' => 'form-control',
+        ),
+    ),
+    'comment' => array(
+        'field' => 'boole',
+        'widget' => 'Radios',
+        'access' => array(
+            'addForm' => true,
+            'editForm' => true,
+        ),
+        'label' => '开启评论',
+        'default' => 1,
+        'required' => false,
+        'options' => array(
+            '不开启',
+            '开启',
+        ),
+        'baseField' => true,
+        'description' => '',
+        'error' => '',
+        'attributes' => array(
+            'class' => 'form-control',
+        ),
+    ),
+    'top' => array(
+        'field' => 'boole',
+        'widget' => 'Radios',
+        'access' => array(
+            'addForm' => true,
+            'editForm' => true,
+        ),
+        'label' => '置顶',
+        'default' => 0,
+        'required' => false,
+        'options' => array(
+            '不置顶',
+            '置顶',
+        ),
+        'baseField' => true,
+        'description' => '',
+        'error' => '',
+        'attributes' => array(
+            'class' => 'form-control',
+        ),
+    ),
+    'hot' => array(
+        'field' => 'boole',
+        'widget' => 'Radios',
+        'label' => '热点',
+        'access' => array(
+            'addForm' => true,
+            'editForm' => true,
+        ),
+        'default' => 0,
+        'required' => false,
+        'options' => array(
+            '非热点',
+            '热点',
+        ),
+        'baseField' => true,
+        'description' => '',
+        'error' => '',
+        'attributes' => array(
+            'class' => 'form-control',
+        ),
+    ),
+    'essence' => array(
+        'field' => 'boole',
+        'widget' => 'Radios',
+        'label' => '精华',
+        'access' => array(
+            'addForm' => true,
+            'editForm' => true,
+        ),
+        'default' => 0,
+        'required' => false,
+        'options' => array(
+            '非精华',
+            '精华',
+        ),
+        'baseField' => true,
+        'description' => '',
+        'error' => '',
+        'attributes' => array(
+            'class' => 'form-control',
+        ),
+    ),
+    'state' => array(
+        'field' => 'number',
+        'widget' => 'Select',
+        'label' => '状态',
+        'access' => array(
+            'addForm' => true,
+            'editForm' => true,
+        ),
+        'default' => 1,
+        'required' => false,
+        'options' => array(
+            '草稿',
+            '正常',
+            '回收站',
+        ),
+        'baseField' => true,
+        'description' => '',
+        'error' => '',
+        'attributes' => array(
+            'class' => 'form-control',
+        ),
+    ),
+    'settings' => array(
+        'checkToken' => false,
+        'validation' => true,
+    ),
+);

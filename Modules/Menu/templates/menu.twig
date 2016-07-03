@@ -1,0 +1,23 @@
+{%- macro main_menu(data,hierarchy) %}
+    {% for key, value in hierarchy %}
+        <li>
+            <a href="{{ url(data[key]['href']) }}">{{ data[key]['name'] }}
+                {% if key != value %}
+                    <i aria-hidden="true" class="icon-caret-down"></i>
+                {% endif %}
+            </a>
+            {% if key != value %}
+                <div class="submenu js-submenu" id="nav-platform-submenu">
+                    <div class="submenu-column">
+                        <ul>
+                            {{ main_menu(data,value) }}
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+        </li>
+    {% endfor %}
+{%- endmacro %}
+<ul>
+{{ main_menu(data,hierarchy) }}
+</ul>

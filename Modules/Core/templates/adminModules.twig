@@ -1,0 +1,49 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="box-body box">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th>ID</th>
+                        <th>模块名</th>
+                        <th>描述</th>
+                        <th>依赖</th>
+                        <th>操作</th>
+                    </tr>
+                    {% for key,item in data %}
+                    <tr>
+                        <td>{{ key }}</td>
+                        <td>{{ item['name'] }}</td>
+                        <td>{{ item['description'] }}</td>
+                        <td>
+                            <p><span>需求：</span>
+                            {% for v in item['require'] %}
+                                {% if data[v] is defined %}
+                                    <span class="label label-success">{{ v }}</span>
+                                {% else %}
+                                    <span class="label label-danger">{{ v }}</span>
+                                {% endif %}
+                            {% endfor %}
+                            </p>
+                            <p><span>冲突：</span>
+                            {% for v in item['conflict'] %}
+                                {% if data[v] is defined %}
+                                    <span class="label label-danger">{{ v }}</span>
+                                {% endif %}
+                            {% endfor %}
+                            </p>
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn btn-primary" type="button">启用</button>
+                                <button class="btn btn-warning" type="button">禁用</button>
+                                <button class="btn btn-danger" type="button">删除</button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

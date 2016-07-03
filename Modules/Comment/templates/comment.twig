@@ -1,0 +1,5 @@
+<div class="post_comment">
+    {{ view.r(commentForm) }}
+    {{ view.r(data) }}
+</div>
+{% do assets.addCss('comment','/modules/comment/css/style.css','footer').addJs('comment','/modules/comment/js/comment.js','footer') %}

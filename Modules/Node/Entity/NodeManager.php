@@ -1,0 +1,28 @@
+<?php
+namespace Modules\Node\Entity;
+
+use Modules\Entity\Entity\Manager;
+
+class NodeManager extends Manager
+{
+    protected $_entityId = 'node';
+    protected $_module = 'node';
+    protected $_source = 'node';
+
+    public function menuTabs()
+    {
+        $links = array();
+        $contentModelList = $this->getContentModelList();
+        foreach ($contentModelList as $key => $contentModel) {
+            $links[] = array(
+                'href' => array(
+                    'for' => 'adminEntityAdd',
+                    'entity' => $this->_entityId,
+                    'contentModel' => $key,
+                ),
+                'name' => $contentModel['modelName'],
+            );
+        }
+        return $links;
+    }
+}

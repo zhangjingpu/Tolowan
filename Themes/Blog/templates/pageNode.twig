@@ -1,0 +1,42 @@
+{% extends "Themes/Blog/templates/page.twig" %}
+{% block body %}
+    <div class="articleContent">
+        <!-- 标题 -->
+        <div class="title">{{ data.title }}</div>
+        <!-- 访问量 ...-->
+        <div class="secTitleBar">
+            <ul>
+                {% if data.cat AND data.cat.term %}
+                <li>分类：
+                    <a href="{{ url(['for':'term','id':data.cat.term.id,'page':1]) }}">{{ data.cat.term.name }}</a>
+                </li>
+                    {% endif %}
+                <li>发表：{{ timeTran(data.changed) }}</li>
+                <li>围观(413)</li>
+                <!-- 获得评论数函数默认是wordpress自带的 -->
+                <li>
+                    <a href="#comments">评论(2)</a>
+                </li>
+            </ul>
+        </div>
+        <!-- 内容 -->
+        <div class="articleCon post_content">
+            {{ data.body }}
+        </div>
+        <!-- 标签 -->
+        <div class="articleTagsBox">
+            <ul><span>标签：</span>
+                {% for nodeTag in data.tags %}
+                    {% if nodeTag.term %}
+                        <a href="{{ url(['for':'term','id':nodeTag.term.id,'page':1]) }}">{{ nodeTag.term.name }}</a>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        <!-- 评论 -->
+        {{ view.r(comment(data)) }}
+    </div>
+{% endblock %}
+{% block rightRegion %}
+    {% include 'Themes/Blog/templates/rightRegion.twig' %}
+{% endblock %}

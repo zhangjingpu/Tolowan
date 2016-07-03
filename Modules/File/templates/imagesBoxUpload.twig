@@ -1,0 +1,58 @@
+<link rel="stylesheet" href="/themes/AdminLTE/plugins/dropzone/dropzone.css">
+{{ content() }}
+<form action="{{ url }}" class="dropzone dz-clickable">
+    <div class="fallback">
+        <input name="file" type="file" multiple/>
+    </div>
+</form>
+<script type="text/javascript" src="/themes/AdminLTE/plugins/dropzone/dropzone.min.js"></script>
+<script type="text/javascript">
+    try {
+        $(".dropzone").dropzone({
+            paramName: "upFile",
+            maxFilesize: 0.5,
+            addRemoveLinks: false,
+            init: function () {
+                this.on("success", function (file, data) {
+                    $.notice('文件上传成功');
+                    alert('zzzzzzzzzz');
+                    jfile = jQuery(file.previewElement);
+                    for(x in data.success){
+                        e = data.success[x];
+                        if(e.fileName == file.name){
+                            alert('sdfsdfsd');
+                            jfile.find('[data-dz-name]').text('点击选中：'+e.newName);
+                            jfile.find('[data-dz-thumbnail]').attr('alt', e.newName).attr('src', e.url).addClass('images-box-item');
+                            jfile.find('[data-dz-uploadprogress]').text('上传成功');
+                            break;
+                        }
+                    }
+                });
+                this.on("successmultiple", function (file, data) {
+                    $.notice('文件上传成功');
+                    alert('rrrrrrrrrrrrr');
+                    jfile = jQuery(file.previewElement);
+                    for(x in data.success){
+                        e = data.success[x];
+                        if(e.fileName == file.name){
+                            alert('ccccccccccc');
+                            jfile.find('[data-dz-name]').text('点击选中：'+e.newName);
+                            jfile.find('[data-dz-thumbnail]').attr('alt', e.newName).attr('src', e.url).addClass('images-box-item');
+                            jfile.find('[data-dz-uploadprogress]').text('上传成功');
+                            break;
+                        }
+                    }
+                });
+            },
+            dictDefaultMessage: '<span class="bigger-150 bolder"><i class="fa fa-caret-right red"></i> 拖拽或点击上传</span> <br /><i class="upload-icon fa fa-cloud-upload blue fa-3x"></i>'
+            ,
+            dictResponseError: '文件上传失败!',
+
+            //change the previewTemplate to use Bootstrap progress bars
+            previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img class=\"images-box-item\" data-dz-thumbnail />\n  </div>\n  <div class=\"progress progress-small progress-striped active\"><div class=\"progress-bar progress-bar-success\" data-dz-uploadprogress></div></div>\n  <div class=\"dz-success-mark\"><span></span></div>\n  <div class=\"dz-error-mark\"><span></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"
+        });
+    } catch (e) {
+        alert('图片上传组件出错，请联系管理员处理!');
+    }
+
+</script>

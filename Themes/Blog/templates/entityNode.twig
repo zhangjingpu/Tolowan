@@ -1,0 +1,30 @@
+<article class="post">
+    <h2 class="post-title">
+        <a href="http://w.com/2016/06/10/hello-world/">{{ data.title }}</a>
+    </h2>
+    <ul class="post-meta">
+        <li>{{ timeTran(data.changed) }}</li>
+        <li class="comment-count">
+            <a href="http://w.com/2016/06/10/hello-world/#comments"> 1 条评论</a>
+        </li>
+    </ul>
+    <div class="post-content">
+        <div class="articleBody clearfix">
+            <div class="row">
+            <!--缩略图-->
+            <div class="articleThumb col-md-4">
+                <a href="http://vinceok.com/music/161.html"><img width="400" height="200" class="wp-post-image" alt="“音乐鬼才”许嵩《雅俗共赏》MV首播" src="http://vince.qiniudn.com/wp-content/uploads/2016/04/3809428659019839056.jpg?imageView2/2/w/400/h/200"></a>
+            </div>
+            <!--摘要-->
+            <div class="articleFeed col-md-8">
+                <p>
+                    《雅俗共赏》MV由台湾金曲奖最佳MV导演比尔贾执导。比尔贾与许嵩相识多年，对许嵩的音乐腔调和态度可谓深度了解，这次合作的MV作品也让这两位不同领域的鬼才都感到相当满意。MV中运用了鲜艳红蓝，请来了多位舞台剧演员：“红”派有大红鼻子小丑，马戏团侏儒...{% if data.description is defined AND data.description  %}{{ subString(data.description,25,true) }}{% else %}{{ subString(data.body,25,true) }}{% endif %}</p></p>
+            </div>
+            <!--tags-->
+            <div class="articleTags">
+                <ul><a rel="tag" href="http://vinceok.com/tag/%e8%ae%b8%e5%b5%a9">许嵩</a><a rel="tag" href="http://vinceok.com/tag/%e9%9b%85%e4%bf%97%e5%85%b1%e8%b5%8f">雅俗共赏</a><a rel="tag" href="http://vinceok.com/tag/%e9%9d%92%e5%b9%b4%e6%99%9a%e6%8a%a5">青年晚报</a></ul>
+            </div>
+            </div>
+        </div>
+    </div>
+</article>

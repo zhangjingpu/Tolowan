@@ -1,0 +1,6 @@
+<div class="well well-sm formElement-group">
+    <h5><label>{{ label }}</label></h5>
+    {% for key,value in element.getGroup() %}
+    {{ view.r(data.renderElement(key,value)) }}
+     {% endfor %}
+</div>

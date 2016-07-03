@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+    <title>{{ title }} </title>
+    <meta name="HandheldFriendly" content="True"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" media="all" href="/themes/blog/style.css"/>
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    {% block head %}
+    <meta name="keywords" content="{{ coreConfig.indexDescription }}"/>
+    <meta name="description" content="{{ coreConfig.indexKeywords }}"/>
+    {% endblock %}
+</head>
+<body>
+
+{% include 'Themes/Blog/templates/header.twig' %}
+<!--文章列表-->
+<div class="articleList container">
+    <div class="row">
+        <div class="col-md-8">
+            {{ content() }}
+            {% block body %}
+            {% endblock %}
+        </div>
+        <div class="col-md-4 right-region">
+            {% block rightRegion %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+<!--footer-->
+{% include 'Themes/Blog/templates/footer.twig' %}
+
+<a class="to-top">
+    <span class="topicon"><i class="fa fa-angle-up"></i></span>
+    <span class="toptext">Top</span>
+</a>
+
+<script src="//cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+<script src="/themes/blog/js/jquery.toTop.min.js"></script>
+<script src="/themes/blog/js/menu.js"></script>
+{{ assets.output(null,null,'footer') }}
+<script>
+    $('.to-top').toTop({
+        position: false,
+        offset: 1000,
+    });
+</script>
+
+</body>
+
+</html>
