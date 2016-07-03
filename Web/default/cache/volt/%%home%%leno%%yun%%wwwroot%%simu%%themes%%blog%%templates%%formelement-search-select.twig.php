@@ -1,1 +1,0 @@
-<span class="input-group-addon input-group-type-select"><?php echo $element; ?></span>

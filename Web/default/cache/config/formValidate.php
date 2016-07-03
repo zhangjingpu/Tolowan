@@ -1,2 +1,0 @@
-<?php $settings = array (
-);
