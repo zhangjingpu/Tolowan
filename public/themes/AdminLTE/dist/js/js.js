@@ -10,6 +10,19 @@ jQuery(function($) {
                 $('#main').html(data);
             }
         });
+    }else {
+        if ($('#main').attr('data')) {
+            $.ajax({
+                url: $('#main').attr('data'),
+                async: false,
+                dataType: "html",
+                success: function(data) {
+                    $.notice('加载页面成功');
+                    $('#main').html(data);
+
+                }
+            });
+        }
     }
     //表格全选
     $('#main').on(
@@ -33,6 +46,22 @@ jQuery(function($) {
         });
         return false;
     });
+    $.ajaxNoBlock = function (dataUrl) {
+        $.ajax({
+            url: dataUrl,
+            async: false,
+            dataType: "html",
+            success: function(data) {
+                $.notice('请求成功');
+            }
+        });
+    }
+    //进度
+    $('body').on('click','a[data-cron]',function () {
+        dataUrl = $(this).attr('href');
+        $.ajaxNoBlock(dataUrl);
+        return false;
+    })
     //删除确认操作
     $('body').on('click', 'a[data-delete]', function() {
         var r = confirm('是否确认操作');

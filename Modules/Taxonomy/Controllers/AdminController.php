@@ -59,7 +59,6 @@ class AdminController extends Controller
         $this->variables += array(
             'type' => $contentModel,
             'typeInfo' => $typeList[$contentModel],
-            'title' => $typeInfo['modelName'],
             'description' => $typeInfo['description'],
             '#templates' => 'page',
             'title' => $typeInfo['modelName'] . '列表',

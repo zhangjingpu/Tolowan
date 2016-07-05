@@ -94,6 +94,7 @@ $settings = array(
         'wordsmith' => true,
         'minLength' => 1,
         'maxLength' => 11,
+        'required' => false,
         'number' => 1,
         'addition' => true,
         'label' => '图片',

@@ -166,7 +166,7 @@ class AdminController extends Controller
         if (!isset($entityInfo['path']['adminEntityEdit']) || $entityInfo['path']['adminEntityEdit'] === false) {
             return $this->notFount();
         }
-        $label = '添加' . $contentModelInfo['modelName'];
+        $label = '编辑' . $contentModelInfo['modelName'];
         $content = array();
 
         $entityEditForm = $entityManager->editForm($contentModel, $id);

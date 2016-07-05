@@ -166,7 +166,7 @@ class AdminController extends Controller
             'title' => '列表',
             'max' => false,
             'color' => 'primary',
-            'size' => '6',
+            'size' => '12',
             'wrapper' => true,
             'content' => array(
                 'dataList' => array(
@@ -181,21 +181,6 @@ class AdminController extends Controller
                 ),
             ),
         );
-        $content['termHandle'] = array(
-            '#templates' => array(
-                'box',
-                'box-right',
-            ),
-            'id' => 'right_handle',
-            'title' => '添加',
-            'wrapper' => true,
-            'max' => true,
-            'color' => 'success',
-            'size' => '6',
-            'content' => array(
-                'termList' => '',
-            ),
-        );
 
         $this->variables['content'] += $content;
     }
@@ -203,12 +188,6 @@ class AdminController extends Controller
     public function configEditAction()
     {
         extract($this->variables['router_params']);
-        /*$http = new HttpClient();
-        $http->request('http://tolowan.com/aa.php',array(
-            'stream' => true,
-            'blocking' => false,
-            'timeout' => 0,
-        ));*/
         $entity = $this->entityManager->get('config');
         $contentModelInfo = $entity->getContentModelInfo($contentModel);
         $entityEditForm = $entity->editForm($contentModel, $contentModel);
@@ -220,9 +199,15 @@ class AdminController extends Controller
         $this->variables['description'] = $contentModelInfo['description'];
         $this->variables += array(
             'contentModel' => $contentModel,
-            '#templates' => 'pageNoWrapper',
+            '#templates' => 'page',
             'breadcrumb' => array(
-                'module' => array(
+                'configList' => array(
+                    'href' => array(
+                        'for' => 'adminConfig'
+                    ),
+                    'name' => '配置'
+                ),
+                'configEdit' => array(
                     'name' => $contentModelInfo['modelName'],
                 ),
             ),
@@ -236,7 +221,7 @@ class AdminController extends Controller
             ),
             'id' => 'right_handle',
             'title' => '编辑 ' . $contentModelInfo['modelName'],
-            'wrapper' => false,
+            'wrapper' => true,
             'max' => true,
             'color' => 'success',
             'size' => '12',

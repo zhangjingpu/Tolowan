@@ -44,7 +44,7 @@ class Manager extends Plugin
         global $di;
         $addFormInfo = $this->getFields($contentModel);
         $addFormInfo['settings']['contentModel'] = $contentModel;
-        $addFormInfo['contentModel']['settings']['default'] = $contentModel;
+        $data['contentModel'] = $contentModel;
         $entityForm = $di->getShared('form')->create($addFormInfo, $data);
         if ($entityForm->isValid()) {
             $this->save($entityForm);
@@ -60,7 +60,7 @@ class Manager extends Plugin
             if (method_exists($data, 'toArray')) {
                 $data = $data->toArray();
             } else {
-                $data = (array) $data;
+                $data = (array)$data;
             }
         }
         if (is_null($contentModel) && isset($data['contentModel'])) {
@@ -81,12 +81,12 @@ class Manager extends Plugin
 
     public function saveBefore($entityForm)
     {
-        $output = $this->eventsManager->fire("entity:saveBefore", $entityForm);
-        return !empty($output) && $output !== false ? $output : $entityForm;
+        $entityForm->saveBefore('form:entitySave');
+        return $entityForm;
     }
+
     public function save($entityForm)
     {
-        $entityForm = $this->saveBefore($entityForm);
         if ($entityForm === false) {
             return false;
         }
@@ -117,6 +117,9 @@ class Manager extends Plugin
                 if (!isset($data[$fieldKey]) && isset($elementOptions['default']) && isset($elementOptions['required']) && $elementOptions['required'] == false) {
                     $data[$fieldKey] = $elementOptions['default'];
                 }
+                /*if (!isset($data[$fieldKey]) || empty($data[$fieldKey]) && isset($elementOptions['required']) && $elementOptions['required'] == false) {
+                    break;
+                }*/
                 if (isset($data[$fieldKey])) {
                     if (!isset($elementOptions['model'])) {
                         $elementOptions['model'] = '\Models\\' . ucfirst($this->_entityId) . 'Field' . ucfirst($fieldKey);
@@ -195,6 +198,7 @@ class Manager extends Plugin
     {
         $this->eventsManager->fire("entity:saveAfter", $entityModel, $entityForm);
     }
+
     public function getContentModelInfo($contentModel, $key = null)
     {
         $contentModelList = $this->getContentModelList();
@@ -220,6 +224,7 @@ class Manager extends Plugin
         }
         return false;
     }
+
     public function getFields($contentModel = null)
     {
         $baseFields = Config::get($this->_module . '.' . $this->_entityId . 'BaseFields', array());
@@ -441,6 +446,7 @@ class Manager extends Plugin
         }
         return $query;
     }
+
     public function handleForm()
     {
         $handleFormInfo = Config::get($this->_module . '.' . $this->_entityId . 'HandleForm', array());
@@ -482,6 +488,7 @@ class Manager extends Plugin
         }
         return $form;
     }
+
     public function delete($id)
     {
         $modelClassName = $this->_entityInfo['entityModel'];

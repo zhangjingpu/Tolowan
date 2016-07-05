@@ -3,7 +3,7 @@ namespace Modules\Core\Controllers;
 
 use Core\Config;
 use Core\File;
-
+use Phalcon\Version;
 use Core\Mvc\Controller;
 use Modules\Core\Library\Module;
 use Modules\Core\Library\Theme;
@@ -33,25 +33,53 @@ class AdminController extends Controller
     {
         extract($this->variables['router_params']);
         $content = array();
-        $settings = Config::get('Core.settings');
-        $settingsForm = $this->form->create($settings);
-        $this->variables += array(
-            'module' => '系统',
-            'title' => '控制台',
-        );
         $this->variables = array(
-            '#templates' => 'adminIndex',
-            'pageTabs' => array(),
-            'settingsForm' => $settingsForm->renderForm(),
-            'breadcrumbs' => array(
-                'admin' => array(
-                    'href' => array(
-                        'for' => 'adminIndex',
+            'description' => '管理概况',
+            'title' => '控制台',
+            'breadcrumb' => array(),
+            'content' => &$content,
+        );
+        // 添加编辑菜单
+        $content['serverInfo'] = array(
+            '#templates' => 'box',
+            'title' => '服务器信息',
+            'max' => false,
+            'wrapper' => true,
+            'color' => 'primary',
+            'size' => '6',
+            'content' => array(
+                '#templates' => array(
+                    'table',
+                ),
+                'theadDisplay' => false,
+                'thead' => array(
+                    '项目',
+                    '信息',
+                ),
+                'checkAll' => false,
+                'data' => array(
+                    'serverInfo' => array(
+                        '操作系统：',
+                        php_uname('s') . ' ' . php_uname('r'),
                     ),
-                    'name' => '控制台',
+                    'phpVersion' => array(
+                        'php版本：',
+                        phpversion(),
+                    ),
+                    'serverIp' => array(
+                        '服务器IP：',
+                        $this->request->getServerAddress(),
+                    ),
+                    'phpMemory' => array(
+                        'php可用内存：',
+                        get_cfg_var("memory_limit"),
+                    ),
+                    'phalconVersion' => array(
+                        'phalcon版本',
+                        Version::get(),
+                    ),
                 ),
             ),
-            'content' => array(),
         );
     }
 

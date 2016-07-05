@@ -141,6 +141,7 @@ class EntityModel extends Model
 
     public function getTitle()
     {
+        $this->setFields();
         $entityForm = $this->getDI()->getForm()->create($this->_fields);
         foreach ($entityForm->getElements() as $key => $element) {
             $options = $element->getUserOptions();
@@ -284,34 +285,10 @@ class EntityModel extends Model
 
     public function setFields($fields = array())
     {
-        if ($fields) {
-            $this->_fields = $fields;
-        } else {
-            $baseModel = Config::get($this->_module . '.' . $this->_entityId . 'BaseFields', array());
-            if ($this->contentModel) {
-                $contentModel = $this->getContentModelFields();
-                $this->_fields = array_merge($contentModel, $baseModel);
-            } else {
-                //获取该实体下全部字段
-                $entityContentModelList = $this->getContentModelList();
-                foreach ($entityContentModelList as $model) {
-                    $fields = array();
-                    if (isset($model['fields'])) {
-                        if (is_array($model['fields'])) {
-                            $fields = $model['fields'];
-                        } elseif (is_string($model['fields'])) {
-                            $fields = Config::get($model['fields'], array());
-                        }
-                    }
-                    $baseModel = array_merge($baseModel, $fields);
-                }
-                $this->_fields = $baseModel;
-            }
-        }
-        if ($this->_fields) {
-            return $this->_fields;
-        } else {
-            return false;
+        if(isset($this->contentModel) && $this->contentModel){
+            $this->_fields = $this->getDI()->getEntityManager()->get($this->_entityId)->getFields($this->contentModel);
+        }else{
+            $this->_fields = $this->getDI()->getEntityManager()->get($this->_entityId)->getFields();
         }
     }
 

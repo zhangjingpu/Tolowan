@@ -47,7 +47,7 @@ class AdminController extends Controller
         );
         $data = ModelQuery::find($query);
         $content['menuGroup'] = array(
-            '#templates' => 'menuGroup',
+            '#templates' => 'queueMenuGroup',
             'title' => '菜单',
             'data' => array(
                 'runCron' => array(
@@ -118,7 +118,6 @@ class AdminController extends Controller
         } else {
             $progress = $queue->progress($name);
         }
-        Config::printCode($progress);
         $this->variables += array(
             'title' => '进度列表',
             '#templates' => 'progress',

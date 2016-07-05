@@ -6,6 +6,7 @@ $settings = array(
         'class' => array(),
         'accept-charset' => 'utf-8',
         'role' => 'form',
+        'ajax-submit' => '#main',
         'id' => 'coreSettings',
     ),
     'logo' => array(

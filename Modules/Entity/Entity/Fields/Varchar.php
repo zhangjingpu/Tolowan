@@ -18,7 +18,7 @@ class Varchar extends Field
         if (isset($this->_options['fullTextSearch']) && $this->_options['fullTextSearch'] === true && isset($this->_options['entity']) && isset($this->_options['field'])) {
             $params = array(
                 'entity' => $this->_options['entity'],
-                'field' => $this->_options['field'],
+                'field' => $this->_options['fieldName'],
                 'id' => $this->id
             );
             Queue::add('entityFieldScsw', $params);

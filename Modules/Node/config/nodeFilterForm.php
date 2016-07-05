@@ -59,7 +59,9 @@ $settings = array(
             '置顶',
         ),
         'validate' => array(),
-        'attributes' => array(),
+        'attributes' => array(
+            'class' => 'form-control',
+        ),
         'required' => true,
     ),
     'essence' => array(
@@ -74,7 +76,9 @@ $settings = array(
             '精华',
         ),
         'validate' => array(),
-        'attributes' => array(),
+        'attributes' => array(
+            'class' => 'form-control',
+        ),
         'required' => true,
     ),
     'hot' => array(
@@ -89,7 +93,9 @@ $settings = array(
             '热点',
         ),
         'validate' => array(),
-        'attributes' => array(),
+        'attributes' => array(
+            'class' => 'form-control',
+        ),
         'required' => true,
     ),
     'settings' => array(

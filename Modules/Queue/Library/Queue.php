@@ -21,7 +21,6 @@ class Queue
             'callable' => $cronTypeList[$cron]['callable'],
             'data' => serialize($data)
         );
-        Config::printCode($queueData);
         $queueModel = new QueueModel();
         $queueModel->type = $type;
         $queueModel->data = serialize($queueData);

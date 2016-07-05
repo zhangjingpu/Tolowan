@@ -12,22 +12,18 @@ use Phalcon\Security\Random;
 class Form extends Pform
 {
     public $formEntity;
-    public $fieldType;
     public $formId;
-    public $formAttributes;
     public $action;
     public $formError = array();
     public $formName;
     public $layout;
-    public $formOptions;
-    public $_errorInfo = array();
     protected $_hasSubmit = false;
     protected $_canValid = false;
-    protected $_form;
     protected $_eventsManager;
     protected $_renderElement;
 
     protected $_attributes = array();
+
     //ajax-submit
     public function __construct($formEntity = false, $data = array(), $options = array())
     {
@@ -68,7 +64,7 @@ class Form extends Pform
             $this->_attributes['data-toggle'] = 'validator';
         }
         if (is_object($data)) {
-            $data = (array) $data;
+            $data = (array)$data;
         }
         if (empty($data)) {
             switch ($this->formEntity['form']['method']) {
@@ -116,6 +112,11 @@ class Form extends Pform
     public function getData()
     {
         return $this->_data;
+    }
+
+    public function setData($data)
+    {
+        $this->_data = $data;
     }
 
     public function getAction()
@@ -335,6 +336,13 @@ class Form extends Pform
         return '<input type="hidden" name="' . $this->getTokenKey() . '" value="' . $this->getToken() . '" />';
     }
 
+    public function saveBefore($hook=null){
+        if(is_null($hook)){
+            $hook = 'form:save';
+        }
+        $this->getDI()->getEventsManager()->fire($hook, $this);
+    }
+
     public function save()
     {
         $formSave = false;
@@ -455,6 +463,12 @@ class Form extends Pform
     public function start($attributes = array())
     {
         $this->_attributes = array_merge($this->_attributes, $attributes);
+        if (!isset($this->_attributes['id'])) {
+            $this->_attributes['id'] = $this->formId;
+        }
+        if (isset($this->_options['validation']) && $this->_options['validation'] === true) {
+            $this->getDI()->getAssets()->addInlineJs('formValidate' . ucfirst($this->formId), '$(\'#' . $this->_attributes['id'] . '\').validate({validClass: "has-success",});', 'footer');
+        }
         $output = '<form ';
         $output .= renderAttributes($this->_attributes);
         $output .= '>';

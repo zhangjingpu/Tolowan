@@ -195,7 +195,6 @@ class Config extends Plugin
                 ),
                 'icon' => 'info',
                 'name' => '编辑',
-                'data-target' => 'right_handle',
             ),
         );
         if ($this->getDI()->getEventsManager()->fire('entity:links', $this) === false) {

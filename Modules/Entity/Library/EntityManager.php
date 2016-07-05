@@ -48,6 +48,7 @@ class EntityManager
         if (!isset($data['entity']) || !isset($data['field']) || !isset($data['id'])) {
             return '参数错误';
         }
+        Config::printCode($data);
         $fieldName = $data['field'];
         $entity = $di->getShared('entityManager')->get($data['entity']);
         $entityNode = $entity->findFirst($data['id'], true);

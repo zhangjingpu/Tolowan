@@ -45,13 +45,17 @@ class Security extends Psecurity
     {
         $url = $this->getDI()->getRequest()->getURI();
         if (isset($access['path']) && is_array($access['path']) && !empty($access['path'])) {
+            $output = false;
             foreach ($access['path'] as $path) {
-                if (!preg_match('|' . $path . '|', $url)) {
+                if (preg_match('|' . $path . '|', $url)) {
+                    break;
+                }
+                if($output === false){
                     return false;
                 }
             }
         }
-        if (isset($access['expath']) && is_array($access['expath']) && !empty($access['expatho'])) {
+        if (isset($access['expath']) && is_array($access['expath']) && !empty($access['expath'])) {
             foreach ($access['expath'] as $path) {
                 if (preg_match($path, $url)) {
                     return false;

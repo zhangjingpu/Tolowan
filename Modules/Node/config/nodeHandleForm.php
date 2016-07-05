@@ -89,7 +89,9 @@ $settings = array(
         'options' => array('否', '是'),
         'value' => 1,
         'validate' => array(),
-        'attributes' => array(),
+        'attributes' => array(
+            'class' => 'form-control',
+        ),
         'required' => true,
     ),
     'settings' => array(

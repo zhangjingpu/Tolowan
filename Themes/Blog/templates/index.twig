@@ -17,7 +17,7 @@
                 </div>
                 <!--摘要-->
                 <div class="articleFeed">
-                    <p>{{ item.body }}</p>
+                    <p>{{ subString(item.body,250,true) }}</p>
                 </div>
             </div>
             <div class="articleFooter clearfix">
@@ -27,7 +27,7 @@
                     <li>
                         <i class="fa fa-folder-o"></i>
                         {% if item.cat is defined AND item.cat %}
-                            <a href="{{ url(['for':'term','id':item.term.id,'page':1]) }}" rel="category tag">{{ item.term.name }}</a>
+                            <a href="{{ url(['for':'term','id':item.cat.term.id,'page':1]) }}" rel="category tag">{{ item.cat.term.name }}</a>
                         {% endif %}
                     </li>
                 </ul>

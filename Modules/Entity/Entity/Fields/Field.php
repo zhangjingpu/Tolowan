@@ -50,15 +50,17 @@ class Field extends Model
 
     public static function filterValue($value, $option)
     {
-        if($value) {
+        if ($value) {
             if (isset($option['maxNum']) && $option['maxNum'] > 1) {
                 $fieldOutput = array();
                 if ($value) {
                     foreach ($value as $m) {
                         $fieldOutput[] = $m->value;
                     }
-                    if (isset($option['valueType']) && $option['valueType'] == 'string')
+                    if (isset($option['valueType']) && $option['valueType'] == 'string') {
                         return implode(',', $fieldOutput);
+                    }
+                    return $fieldOutput;
                 } else {
                     return $fieldOutput;
                 }
@@ -67,16 +69,18 @@ class Field extends Model
             }
         }
     }
-    
-    public function classNameInfo(){
+
+    public function classNameInfo()
+    {
         $className = get_class($this);
-        $className = explode('\\',$className);
+        $className = explode('\\', $className);
         $className = exEntityNameInfo($className);
         return $className;
     }
-    
-    public function getFieldName(){
-        
+
+    public function getFieldName()
+    {
+
     }
 
     public function setValue($value)

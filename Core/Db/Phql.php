@@ -10,11 +10,11 @@
  */
 namespace Core\Db;
 
+use Phalcon\Db\Column;
+use Phalcon\DI;
+use Phalcon\DiInterface;
 use Phalcon\Mvc\Model\Exception;
 use Phalcon\Mvc\Model\Query;
-use Phalcon\DiInterface;
-use Phalcon\DI;
-use Phalcon\Db\Column;
 
 /**
  * Phalcon\Mvc\Model\Query\Builder
@@ -885,13 +885,13 @@ class Phql
     public function limit($limit, $offset = null)
     {
         if (is_numeric($limit) === true) {
-            $this->_limit = (int)$limit;
+            $this->_limit = (int) $limit;
         } else {
             throw new Exception('Invalid parameter type.');
         }
 
         if (is_null($offset) === false && is_numeric($offset) === true) {
-            $this->_offset = (int)$offset;
+            $this->_offset = (int) $offset;
         }
 
         return $this;
@@ -1191,7 +1191,8 @@ class Phql
 
         return $phql;
     }
-    public function getParams(){
+    public function getParams()
+    {
         return $this->_bindParams;
     }
     /**

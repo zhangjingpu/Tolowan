@@ -25,4 +25,14 @@ class NodeManager extends Manager
         }
         return $links;
     }
+
+    public function saveBefore($entityForm)
+    {
+        $data = $entityForm->getData();
+        if (!isset($data['uid']) || empty($data['uid'])) {
+            $data['uid'] = $this->user->id;
+        }
+        $entityForm->setData($data);
+        parent::saveBefore($entityForm);
+    }
 }

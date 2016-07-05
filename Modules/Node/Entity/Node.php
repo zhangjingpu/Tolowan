@@ -158,22 +158,4 @@ class Node extends EntityModel
         }
         $this->getDI()->getFlash()->notice('成功执行' . $output['success'] . '条，' . $output['error'] . '条执行失败');
     }
-
-    public function saveEntityBefore($form)
-    {
-        parent::saveEntityBefore($form);
-
-        //处理创建和更改
-        if (isset($this->created) && $this->created && strtotime($this->created)) {
-            $this->created = strtotime($this->created);
-        } else {
-            $this->created = time();
-        }
-        if (isset($this->changed) && $this->changed && strtotime($this->created)) {
-            $this->changed = strtotime($this->changed);
-        } else {
-            $this->changed = time();
-        }
-    }
-
 }
