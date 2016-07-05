@@ -36,7 +36,7 @@
 
 例如在第一步中，我们录入的域名为：baidu.com -> Baidu ,我们则需要将siteroot/Web/default目录复制为siteroot/Web/Baidu 注意：首字母必须未大写
 
-### 4. 绑定域名 
+### 4. 绑定域名
 
 根据上文设置，以apache服务器为例，需要进行如下设置
 
@@ -45,11 +45,11 @@
     ServerName baidu.com
     </VirtualHost>
 
-> 默认后台路径：domain.com/amdin/frame 
+> 默认后台路径：domain.com/amdin/frame
 > 默认登陆地址：domain.com/login.html
-> 
+>
 > 默认管理员账户：
-> user：admin@admin.com 
+> user：admin@admin.com
 > password：guanliyuan
 
 
@@ -66,7 +66,7 @@
 
 ### 实体（siteroot/Modules/Entity）
 
-是具有相同功能的对象，在drupal中内置了三种实体类型：
+是具有相同功能的对象，在Tolowan中内置了三种实体类型：
 
  - 基于数据库模型的常规实体
  - 基于配置的配置实体
@@ -108,9 +108,9 @@
 
 ### 配置(siteroot/Core/Config)
 
-drupal直接以数组保存配置信息，当然使用前您需要通过命名空间引入该文件
+Tolowan直接以数组保存配置信息，当然使用前您需要通过命名空间引入该文件
 
-    Config::get('config') //获取config配置 
+    Config::get('config') //获取config配置
 
     Config::set('config',array())//设置配置内容
 
@@ -125,7 +125,7 @@ drupal直接以数组保存配置信息，当然使用前您需要通过命名�
 
 ### 表单
 
-drupal直接通过数组来声明表单，我们也可以把数组保存在配置文件中，通过配置名来生成表单。
+Tolowan直接通过数组来声明表单，我们也可以把数组保存在配置文件中，通过配置名来生成表单。
 
 例如：siteroot/Modules/Search/config/searchForm.php 是声明的搜索表单，配置名为：search.searchForm （模块名+文件名），在模板中我们可以这么使用。
 
@@ -133,7 +133,7 @@ drupal直接通过数组来声明表单，我们也可以把数组保存在配�
 
 ### 模型
 
-drupal中，你可以通过数组的方式来构建查询，简单距离：
+Tolowan中，你可以通过数组的方式来构建查询，简单距离：
 
      <?php
     $query = array(
