@@ -46,10 +46,11 @@
     </VirtualHost>
 
 > 默认后台路径：domain.com/amdin/frame 
-默认登陆地址：domain.com/login.html 
-默认管理员账户：
+> 默认登陆地址：domain.com/login.html
+> 
+> 默认管理员账户：
 > user：admin@admin.com 
-password：guanliyuan
+> password：guanliyuan
 
 
 ----------
