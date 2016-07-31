@@ -1,0 +1,39 @@
+<div id="form-element-{{ formId }}" class="form-group">
+  {% if layout == 'inline' %}
+    <div class="input-group">
+      <div class="input-group-addon">{{ label }}</div>{{ element }}
+    </div>
+  {% else %}
+    <h5>
+      <label>{{ label }}</label>
+      <small class="help-block inline">&nbsp;&nbsp;
+        <i
+                class="fa fa-fw fa-hand-o-right"></i>
+        &nbsp;&nbsp;{{ description }}
+      </small>
+    </h5>
+    <div>{{ element }}</div>
+  {% endif %}
+</div>
+
+<script type='text/javascript' src="/themes/AdminLTE/dist/js/bootstrap-tag.min.js"></script>
+<script type='text/javascript' src="/themes/AdminLTE/dist/js/typeahead.min.js"></script>
+<script type="text/javascript">
+  (function ($) {
+    var tag_input = $('#{{ name }}');
+    if (!( /msie\s*(8|7|6)/.test(navigator.userAgent.toLowerCase()))) {
+      tag_input.tag(
+              {
+                placeholder: tag_input.attr('placeholder'),
+                //enable typeahead by specifying the source array
+                source: ['aaaaa','bbbbb','cccccc','dddddd'],
+              }
+      );
+    }
+    else {
+      //display a textarea for old IE, because it doesn't support this plugin or another one I tried!
+      tag_input.after('<textarea id="' + tag_input.attr('id') + '" name="' + tag_input.attr('name') + '" rows="3">' + tag_input.val() + '</textarea>').remove();
+      //$('#form-field-tags').autosize({append: "\n"});
+    }
+  })(jQuery);
+</script>

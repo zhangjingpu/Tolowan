@@ -1,0 +1,35 @@
+#images_list .list li {
+    display: inline-block;
+    list-style: outside none none;
+    margin: 8px;
+    overflow: hidden;
+    padding: 0px 7px;
+}
+.up_dir > a {
+    background: #82af6f none repeat scroll 0 0;
+    border-radius: 7px;
+    color: #fff;
+    font-size: 12px;
+    margin-left: 30px;
+    padding: 3px 5px;
+    text-decoration: none;
+}
+.up_dir > a:hover{
+  background:#319460;
+}
+#images_list .list li img {
+    height: 100px;
+    cursor:pointer;
+}
+#images_list .list .file div {
+    background: #000 none repeat scroll 0 0;
+    color: #fff;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 30px;
+    margin-top: -5px;
+    text-align: center;
+}
+#images_list .pagination{
+    padding-left: 40px;
+}
