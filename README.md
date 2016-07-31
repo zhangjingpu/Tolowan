@@ -12,7 +12,7 @@
 > * 提供的站内搜索系统原生支持全文搜索。
 > * 使用volt编写主题模板，类twig语法，单比twig更高效
 > * Tolowan提供的实体管理、字段管理、表单管理、模型管理等机制，可以大大缩减二次开发的难度和所需时间
-
+![后台截图][2]
 ------
 
 ## 安装phalcon
@@ -57,7 +57,6 @@
 
 
 > 注：其中上文中siteroot为程序目录所在地址，**[加入QQ交流群：574199144][1]**
-
 
 ----------
 
@@ -154,3 +153,4 @@ Tolowan中，你可以通过数组的方式来构建查询，简单距离：
 
 
   [1]: http://shang.qq.com/wpa/qunwpa?idkey=0d7af0cd86e319424f9df2bb942c4ad124f587ea98e125631e57700f852fce5f
+  [2]: http://git.oschina.net/itdashu/Tolowan/raw/master/screen.png
