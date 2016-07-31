@@ -26,20 +26,18 @@
                     </td>
                     <td class="center">{{ item.id }}</td>
                     <td class="center">
-                        <a href="{{ url(['for':'entity','entityName':'user','id':item.id]) }}" data-toggle="tooltip"
-                           target="_blank" data-placement="right" title="访问{{ getVar(item,'label') }}主页">
-                            {{ getVar(item,'label') }}
+                        <a href="{{ url(['for':'user','id':item.id]) }}" data-toggle="tooltip"
+                           target="_blank" data-placement="right" title="访问{{ item.name }}主页">
+                            {{ item.name }}
                         </a>
                     </td>
                     <td class="center">
                         {% for role in item.roles %}
-                            <a data-target="#main" href="{{ url }}?roles={{ role.value }}" data-toggle="tooltip"
-                               target="_blank"
-                               data-placement="right" title="只查看该用户文章">{{ role.value }}</a>
+                            <a data-target="#main" href="{{ staticUrl(['adminUserFilterForm':'adminUserFilterForm','uid':item.role]) }}" data-toggle="tooltip" data-placement="right" title="只查看该用户文章">{{ role.value }}</a>
                             {% if loop.last == false %}，{% endif %}
                         {% endfor %}
                     </td>
-                    <td class="center">{{ getVar(item,'active') }}</td>
+                    <td class="center">{{ getVar(['未激活','激活','金融'],item.active) }}</td>
                     <td class="center">{{ item.created }}</td>
                     <td class="center">
                         {% for key,link in item.links() %}

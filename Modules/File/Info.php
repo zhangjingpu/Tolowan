@@ -1,12 +1,16 @@
 <?php
 $settings = array(
     'name' => 'File',
-    'machine' => 'Core',
+    'machine' => 'file',
     'require' => array(),
     'conflict' => array(),
     'description' => '核心组件，文件上传、管理',
     'handle' => array(
-        'setting' => array('name' => '设置', 'link' => '/'),
-        'quanxian' => array('name' => '权限', 'link' => '/'),
+        'setting' => false,
+        'install' => false,
+        'startUsing' => false,
+        'stopUsing' => false,
+        'uninstall' => false,
+        'delete' => false,
     ),
 );

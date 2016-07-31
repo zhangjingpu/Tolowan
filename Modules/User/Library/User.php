@@ -60,12 +60,12 @@ class User extends Plugin
         $flash = $di->getShared('flash');
         $security = $di->getShared('security');
         if (isset($data['user']) && isset($data['password'])) {
-            $userType = 'name';
+            //$userType = 'name';
             if (preg_match('/^([0-9A-Za-z\\-_\\.]+)@([0-9a-z]+\\.[a-z]{2,3}(\\.[a-z]{2})?)$/i', $data['user'])) {
-                $userType = 'email';
+                //$userType = 'email';
                 $user = UserEntity::findFirstByEmail($data['user']);
             } elseif (preg_match("/^1[34578]\d{9}$/", $data['user'])) {
-                $userType = 'tel';
+                //$userType = 'tel';
                 $user = UserEntity::findFirstByPhone($data['user']);
                 if (!$user) {
                     $user = UserEntity::findFirstByName($data['user']);

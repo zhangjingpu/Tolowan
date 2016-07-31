@@ -24,8 +24,8 @@
                 </li>
                 {% for item in data.items %}
                     <li class="{{ item.content_type }}">
-                        <img src="{{ item.path }}" dir="{{ item.path }}">
-                        <div>点击添加内容</div>
+                        <img src="{{ item.getPath() }}">
+                        <div>添加图片到内容</div>
                     </li>
                 {% else %}
                     <li>图库为空</li>

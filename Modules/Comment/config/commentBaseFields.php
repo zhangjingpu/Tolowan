@@ -72,6 +72,7 @@ $settings = array(
             'addForm' => true,
             'editForm' => true,
         ),
+        'wordsmith' => false,
         'required' => true,
         'attributes' => array(
             'class' => 'form-control'

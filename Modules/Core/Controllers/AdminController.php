@@ -3,10 +3,10 @@ namespace Modules\Core\Controllers;
 
 use Core\Config;
 use Core\File;
-use Phalcon\Version;
 use Core\Mvc\Controller;
 use Modules\Core\Library\Module;
 use Modules\Core\Library\Theme;
+use Phalcon\Version;
 
 class AdminController extends Controller
 {
@@ -160,7 +160,7 @@ class AdminController extends Controller
             ),
         );
     }
-    
+
     public function modulesInstallAction()
     {
         extract($this->variables['router_params']);

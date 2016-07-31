@@ -1,37 +1,67 @@
 <?php
 $settings = array(
-	'formId' => 'login',
+	'formId' => 'changePassword',
 	'form' => array(
 		'action' => '',
 		'method' => 'post',
 		'class' => array(),
 		'accept-charset' => 'utf-8',
 		'role' => 'form',
-		'id' => 'login',
+		'id' => 'changePassword',
 	),
-	'email' => array(
-		'label' => '邮箱',
-		'userOptions' => array(
-			'labelAttributes' => array(
-				'class' => array(),
-			),
-			'groupAttributes' => array(
-				'class' => array(),
-				'id' => 'group_name',
-			),
-			'widgetBoxAttributes' => array(
-				'class' => array(),
-			),
-			'helpAttributes' => array(
-				'class' => array(),
-			),
-		),
-		'error' => '',
-		'description' => '您正在使用的邮箱',
-		'field' => 'string',
-		'widget' => 'Text',
-		'validate' => array(),
-		'attributes' => array(),
-		'required' => true,
-	),
+    'old_password' => array(
+        'field' => 'string',
+        'widget' => 'Password',
+        'access' => array(
+            'addForm' => true,
+            'editForm' => true,
+        ),
+        'default' => '',
+        'required' => true,
+        'baseField' => true,
+        'attributes' => array(
+            'class' => 'form-control',
+        ),
+        'error' => '',
+        'label' => '老密码',
+        'description' => '请输入您现在的密码',
+    ),
+    'password' => array(
+        'field' => 'string',
+        'widget' => 'Password',
+        'access' => array(
+            'addForm' => true,
+            'editForm' => true,
+        ),
+        'default' => '',
+        'required' => true,
+        'baseField' => true,
+        'attributes' => array(
+            'class' => 'form-control',
+        ),
+        'error' => '',
+        'label' => '密码',
+        'description' => '您的新密码',
+    ),
+    'confirmPassword' => array(
+        'field' => 'string',
+        'widget' => 'Password',
+        'access' => array(
+            'addForm' => true,
+            'editForm' => true,
+        ),
+        'default' => '',
+        'required' => true,
+        'baseField' => true,
+        'attributes' => array(
+            'class' => 'form-control',
+        ),
+        'error' => '',
+        'label' => '确认密码',
+        'description' => '重复输入您的新密码',
+    ),
+    'settings' => array(
+        'error' => '注册失败',
+        'success' => '注册成功'
+    )
 );

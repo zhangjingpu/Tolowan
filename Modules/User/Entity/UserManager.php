@@ -2,6 +2,7 @@
 namespace Modules\User\Entity;
 
 use Modules\Entity\Entity\Manager;
+use Core\Config;
 
 class UserManager extends Manager
 {
@@ -23,5 +24,44 @@ class UserManager extends Manager
             );
         }
         return $links;
+    }
+
+    public function addForm($contentModel, $data = array())
+    {
+        global $di;
+        $addFormInfo = Config::get('user.userBaseFields');
+        $addFormInfo['settings']['contentModel'] = $contentModel;
+        $addFormInfo['roles']['settings']['default'] = array($contentModel=>$contentModel);
+        $this->entityForm = $di->getShared('form')->create($addFormInfo, $data);
+        if ($this->entityForm->isValid()) {
+            $this->save();
+        }
+        return $this->entityForm;
+    }
+
+    public function editForm($contentModel = null, $id = null)
+    {
+        global $di;
+        $data = $this->findFirst($id);
+        if (is_object($data)) {
+            if (method_exists($data, 'toArray')) {
+                $data = $data->toArray();
+            } else {
+                $data = (array) $data;
+            }
+        }
+        if(isset($data['password'])){
+            unset($data['password']);
+        }
+        $addFormInfo = Config::get('user.userBaseFields');
+        $addFormInfo['password']['required'] = false;
+        $addFormInfo['confirmPassword']['required'] = false;
+        $addFormInfo['settings']['contentModel'] = $contentModel;
+        $addFormInfo['settings']['id'] = $id;
+        $this->entityForm = $di->getShared('form')->create($addFormInfo, $data);
+        if ($this->entityForm->isValid()) {
+            $this->save();
+        }
+        return $this->entityForm;
     }
 }

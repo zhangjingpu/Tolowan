@@ -60,7 +60,7 @@ class FormInit
             'Identical' => '\Modules\Form\Forms\FormValidationInit::identical',
             'Function' => '\Modules\Form\Forms\FormValidationInit::functions',
             'Email' => '\Modules\Form\Forms\FormValidationInit::email',
-            'ExclusionIn' => '\Modules\Form\Forms\FormValidationInit:exclusionIn',
+            'ExclusionIn' => '\Modules\Form\Forms\FormValidationInit::exclusionIn',
             'InclusionIn' => '\Modules\Form\Forms\FormValidationInit::inclusionIn',
             'Regex' => '\Modules\Form\Forms\FormValidationInit::regex',
             'StringLength' => '\Modules\Form\Forms\FormValidationInit::stringLength',
@@ -86,6 +86,7 @@ class FormInit
                     'Select' => '下拉列表',
                     'Hidden' => '隐藏表单',
                     'Radios' => '单选按钮组',
+                    'Autoinput' => '自动完成组'
                 ),
                 'settings' => array(),
                 'validate' => array(
@@ -126,6 +127,7 @@ class FormInit
                     'Text' => '文本框',
                     'Checkbox' => '复选框',
                     'Select' => '下拉列表',
+                    'Autoinput' => '自动完成组'
                 ),
                 'validate' => array(
                     array(
@@ -176,6 +178,7 @@ class FormInit
                     'Selects' => '多选下拉列表',
                     'Radios' => '单选按钮组',
                     'Hidden' => '隐藏文本框',
+                    'Autoinput' => '自动完成组'
                 ),
                 'settings' => array(),
                 'validate' => array(),
@@ -248,13 +251,10 @@ class FormInit
         self::$field = $field;
     }
 
-    public static function callElement(&$t, $element)
+    public static function callElement(&$t, &$element)
     {
-        if (isset(self::$element[$element['value']['widget']])) {
-            return call_user_func_array(self::$element[$element['value']['widget']], array(
-                &$t,
-                $element,
-            ));
+        if (isset(self::$element[$element['widget']])) {
+            return self::$element[$element['widget']]($t,$element);
         } else {
             return false;
         }
@@ -263,10 +263,7 @@ class FormInit
     public static function callValidate(&$t, $validate)
     {
         if (isset($validate['v']) && isset(self::$validate[$validate['v']])) {
-            return call_user_func_array(self::$validate[$validate['v']], array(
-                &$t,
-                $validate,
-            ));
+            return self::$validate[$validate['v']]($t,$validate);
         } else {
             return false;
         }

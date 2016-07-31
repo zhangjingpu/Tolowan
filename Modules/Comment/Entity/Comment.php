@@ -37,6 +37,7 @@ class Comment extends EntityModel
         ));
         parent::initialize();
     }
+
     public function setCreated($date)
     {
         if (strtotime($date)) {
@@ -63,10 +64,9 @@ class Comment extends EntityModel
 
     public function beforeValidationOnCreate()
     {
-        if (!$this->created) {
-            $this->created = time();
+        if ($this->getDI()->getUser()->isLogin()) {
+            $this->uid = $this->getDI()->getUser()->id;
         }
-        $this->changed = time();
     }
 
     public function beforeValidationOnUpdate()
@@ -82,5 +82,14 @@ class Comment extends EntityModel
         } else {
             $this->changed = time();
         }
+    }
+
+    public function afterSave()
+    {
+        global $di;
+        $nodeEntity = $di->getShared('entityManager')->get('node');
+        $node = $nodeEntity->findFirst($this->nid, true);
+        $node->comment_num = $node->comment_num + 1;
+        $node->save();
     }
 }

@@ -4,7 +4,8 @@ namespace Modules\Ckeditor\Controllers;
 use Core\Config;
 use Core\File;
 use Core\Mvc\Controller;
-use Modules\File\Library\Common as Fcommon;
+use Modules\File\Models\File as FileModel;
+use Phalcon\Paginator\Adapter\Model as PaginatorModel;
 
 class IndexController extends Controller
 {
@@ -12,6 +13,7 @@ class IndexController extends Controller
     protected $imgext = ['bmp', 'gif', 'jpg', 'jpe', 'jpeg', 'png']; // allowed image extensions
     protected $imgdr = ''; // current folder (in $root) with images
     public $config;
+
     public function initialize()
     {
         $this->config = Config::get('config');
@@ -22,6 +24,7 @@ class IndexController extends Controller
         $this->root = trim($this->root, '/') . '/';
         $this->imgdr = isset($_POST['imgdr']) ? trim(trim(strip_tags($_POST['imgdr'])), '/') . '/' : '';
     }
+
     public function indexAction()
     {
         extract($this->variables['router_params']);
@@ -41,21 +44,37 @@ class IndexController extends Controller
         $this->variables += array(
             '#templates' => 'ckBrowseImage',
             'CKEditor' => $getData['CKEditor'],
-            'CKEditorFuncNum' => (int) $getData['CKEditorFuncNum'],
+            'CKEditorFuncNum' => (int)$getData['CKEditorFuncNum'],
             'langCode' => $getData['langCode'],
         );
     }
+
     public function browseImageListAction()
     {
         extract($this->variables['router_params']);
-        $data = Fcommon::find(array(
-            'limit' => 20,
-            'page' => $page,
-            'paginator' => true,
+        if (!$this->user->isLogin()) {
+            $uid = 0;
+        } else {
+            $uid = $this->user->id;
+        }
+        $query = FileModel::find(array(
+            'conditions' => 'uid = :uid: AND content_type IN (:content_type:) AND access > :access:',
+            'bind' => array(
+                'uid' => $uid,
+                'content_type' => "'jpeg','png','jpg','gif'",
+                'access' => 19
+            )
         ));
+        $data = new PaginatorModel(
+            array(
+                "data" => $query,
+                "limit" => 16,
+                "page" => $page
+            )
+        );
         $this->variables += array(
             '#templates' => 'ckBrowseImageList',
-            'data' => $data,
+            'data' => $data->getPaginate(),
             'page' => $page,
         );
     }
@@ -63,26 +82,16 @@ class IndexController extends Controller
     public function uploadImageAction()
     {
         extract($this->variables['router_params']);
-        $this->variables['page'] = array(
-            '#templates' => 'upload_image',
-        );
+        $data = '';
         if ($this->request->hasFiles() == true) {
-            $config = Config::get('config');
-            // Print the real file names and sizes
             foreach ($this->request->getUploadedFiles() as $file) {
-
-                //Print file details
-                //echo $file->getName(), " ", $file->getSize(), "\n";
-
-                //Move the file into the application
-                $dir = 'public/images/' . Config::$encode . '/' . date('Y/m/d/');
+                $urlPath = '/images/' . date('Y/m/d/');
+                $dir = WEB_CODE.$urlPath;
                 $fileNameArray = explode('.', $file->getName());
                 $fileType = end($fileNameArray);
-                $fileNameEncode = base64_encode($fileNameArray[0]);
-                $fileNameEncode = str_replace('/', '_', $fileNameEncode);
-                $fileNameEncode = str_replace('+', ':', $fileNameEncode);
-                $url = '/images/' . Config::$encode . '/' . date('Y/m/d/') . $fileNameEncode . '.' . $fileType;
-                $fileDir = $config['dir']['rootDir'] . $dir;
+                $fileNameEncode = time();
+                $url = $urlPath . $fileNameEncode . '.' . $fileType;
+                $fileDir = ROOT_DIR . $dir;
                 $newFile = $fileDir . $fileNameEncode . '.' . $fileType;
                 if (!file_exists($fileDir)) {
                     File::mkdir($dir);
@@ -93,12 +102,16 @@ class IndexController extends Controller
                 $state = $file->moveTo($newFile);
                 $callback = $this->request->get('CKEditorFuncNum');
                 if ($state) {
-                    echo '<script type="text/javascript">window.parent.CKEDITOR.tools.callFunction(' . $callback . ',"' . $url . '","");</script>';
+                    $data .= '<script type="text/javascript">window.parent.CKEDITOR.tools.callFunction(' . $callback . ',"' . $url . '","");</script>';
                 } else {
-                    echo '<script type="text/javascript">alert("上传图片失败啦")</script>';
+                    $data .= '<script type="text/javascript">alert("上传图片失败啦")</script>';
                 }
-                return;
             }
         }
+
+        $this->variables += array(
+            '#templates' => 'upload_image',
+            'data' => &$data
+        );
     }
 }

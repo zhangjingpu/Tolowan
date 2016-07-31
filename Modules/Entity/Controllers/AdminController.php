@@ -16,12 +16,14 @@ class AdminController extends Controller
         if (!isset($entityInfo['path']['adminEntityList']) || $entityInfo['path']['adminEntityList'] === false) {
             return $this->notFount();
         }
+        $contentModelList = $entityObject->getContentModelList();
         $label = $entityInfo['entityName'];
         $filterForm = $entityObject->filterForm($entity);
         $query = array(
-            'limit' => 30,
+            'limit' => 20,
             'page' => $page,
             'paginator' => true,
+            'order' => 'changed DESC',
         );
         if ($filterForm->isValid()) {
             $query = $entityObject->submitFilterForm($filterForm, $query);
@@ -29,6 +31,7 @@ class AdminController extends Controller
         $data = $entityObject->find($query);
         $this->variables = array_merge($this->variables, array(
             'title' => '实体',
+            'contentModelList' => $contentModelList,
             'description' => $label . '列表',
             'params' => $this->variables['router_params'],
             'breadcrumb' => array(
@@ -94,10 +97,10 @@ class AdminController extends Controller
     {
         $params = $this->request->getQuery();
         foreach (array(
-            'top',
-            'hot',
-            'essence',
-        ) as $value) {
+                     'top',
+                     'hot',
+                     'essence',
+                 ) as $value) {
             if (isset($params[$value])) {
                 $query[$value] = 1;
             }
@@ -141,20 +144,13 @@ class AdminController extends Controller
                     'name' => $label,
                 ),
             ),
-            'content' => array(),
-        );
-        $content['addNode'] = array(
-            '#templates' => 'box',
-            'title' => $label,
-            'max' => false,
-            'color' => 'primary',
-            'wrapper' => true,
-            'size' => '12',
             'content' => array(
-                'nodeAdd' => $entityEditForm->renderForm(),
+                'entityForm' => array(
+                    '#templates' => 'adminEntityForm',
+                    'data' => $entityEditForm,
+                ),
             ),
         );
-        $this->variables['content'] += $content;
     }
 
     public function editAction()
@@ -184,20 +180,13 @@ class AdminController extends Controller
                     'name' => $label,
                 ),
             ),
-            'content' => array(),
-        );
-        $content['addNode'] = array(
-            '#templates' => 'box',
-            'title' => $label,
-            'max' => false,
-            'color' => 'primary',
-            'wrapper' => true,
-            'size' => '12',
             'content' => array(
-                'nodeAdd' => $entityEditForm->renderForm(),
+                'entityForm' => array(
+                    '#templates' => 'adminEntityForm',
+                    'data' => $entityEditForm,
+                ),
             ),
         );
-        $this->variables['content'] += $content;
     }
 
     public function deleteAction()
@@ -264,11 +253,14 @@ class AdminController extends Controller
     }
 
     public function addTypeAction()
-    {}
+    {
+    }
 
     public function editTypeAction()
-    {}
+    {
+    }
 
     public function deleteTypeAction()
-    {}
+    {
+    }
 }

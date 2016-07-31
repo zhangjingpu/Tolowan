@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Entity\Entity\Fields;
 
+use Core\Config;
 use Phalcon\Mvc\Model;
 use Modules\Queue\Library\Queue;
 
@@ -21,9 +22,10 @@ class Text extends Field
 
     public function afterSave()
     {
-        if (isset($this->_options['fullTextSearch']) && $this->_options['fullTextSearch'] === true && isset($this->_options['entity']) && isset($this->_options['field'])) {
+        $this->getDI()->getFlash()->success('Hahahhahhahhah');
+        if (isset($this->_options['fullTextSearch']) && $this->_options['fullTextSearch'] === true && isset($this->_options['entityId']) && isset($this->_options['fieldName'])) {
             $params = array(
-                'entity' => $this->_options['entity'],
+                'entity' => $this->_options['entityId'],
                 'field' => $this->_options['fieldName'],
                 'id' => $this->id
             );

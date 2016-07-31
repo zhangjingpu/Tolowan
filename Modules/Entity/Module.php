@@ -2,7 +2,7 @@
 $di->setShared('entityManager', '\Modules\Entity\Library\EntityManager');
 
 //定义函数
-function entity_list($entity, $query = array())
+function entityList($entity, $query = array())
 {
     global $di;
     $entityModel = $di->getShared('entityManager')->get($entity);

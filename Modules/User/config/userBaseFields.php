@@ -16,6 +16,7 @@ $settings = array(
         'label' => 'id'
     ),
     'name' => array(
+        'left' => true,
         'field' => 'string',
         'widget' => 'Text',
         'isLabel' => true,
@@ -33,6 +34,7 @@ $settings = array(
         'description' => '用户名',
     ),
     'email' => array(
+        'left' => true,
         'field' => 'string',
         'widget' => 'Text',
         'addForm' => false,
@@ -48,6 +50,7 @@ $settings = array(
         'description' => '',
     ),
     'phone' => array(
+        'left' => true,
         'field' => 'string',
         'widget' => 'Text',
         'access' => array(
@@ -64,14 +67,87 @@ $settings = array(
         'label' => '电话',
         'description' => '',
     ),
+    'score' => array(
+        'model' => '\Modules\User\Entity\Fields\UserFieldScore',
+        'right' => true,
+        'field' => 'string',
+        'widget' => 'Text',
+        'isLabel' => true,
+        'access' => array(
+            'addForm' => true,
+            'editForm' => true,
+        ),
+        'minLength' => 1,
+        'maxLength' => 11,
+        'isTitle' => true,
+        'number' => 1,
+        'required' => false,
+        'default' => 0,
+        'addition' => true,
+        'label' => '积分',
+        'description' => '',
+        'error' => '',
+        'attributes' => array(
+            'class' => 'form-control',
+        ),
+    ),
+    'gold' => array(
+        'right' => true,
+        'field' => 'string',
+        'widget' => 'Text',
+        'isLabel' => true,
+        'default' => 0,
+        'required' => false,
+        'access' => array(
+            'addForm' => true,
+            'editForm' => true,
+        ),
+        'minLength' => 1,
+        'maxLength' => 11,
+        'isTitle' => true,
+        'number' => 1,
+        'addition' => true,
+        'label' => '财富',
+        'description' => '',
+        'error' => '',
+        'model' => '\Modules\User\Entity\Fields\UserFieldGold',
+        'attributes' => array(
+            'class' => 'form-control',
+        ),
+    ),
+    'face' => array(
+        'model' => '\Modules\User\Entity\Fields\UserFieldFace',
+        'field' => 'file',
+        'isLabel' => true,
+        'access' => array(
+            'addForm' => true,
+            'editForm' => true,
+            'exPath' => array(
+                '/admin/.*',
+                '/.*?'
+            )
+        ),
+        'minLength' => 1,
+        'maxLength' => 11,
+        'isTitle' => true,
+        'left' => true,
+        'number' => 1,
+        'addition' => true,
+        'label' => '头像',
+        'description' => '',
+        'error' => '',
+        'attributes' => array(
+            'class' => 'form-control',
+        ),
+    ),
     'password' => array(
+        'left' => true,
         'field' => 'string',
         'widget' => 'Password',
         'access' => array(
             'addForm' => true,
             'editForm' => true,
         ),
-        'default' => '',
         'required' => true,
         'baseField' => true,
         'attributes' => array(
@@ -82,13 +158,13 @@ $settings = array(
         'description' => '',
     ),
     'confirmPassword' => array(
+        'left' => true,
         'field' => 'string',
         'widget' => 'Password',
         'access' => array(
             'addForm' => true,
             'editForm' => true,
         ),
-        'default' => '',
         'required' => true,
         'baseField' => true,
         'attributes' => array(
@@ -99,6 +175,7 @@ $settings = array(
         'description' => '',
     ),
     'active' => array(
+        'right' => true,
         'field' => 'boole',
         'widget' => 'Radios',
         'access' => array(
@@ -114,14 +191,13 @@ $settings = array(
         'options' => array(
             '未激活', '已激活'
         ),
-        'attributes' => array(
-            'class' => 'form-control',
-        ),
+        'attributes' => array(),
         'description' => '',
         'error' => '',
         'label' => '激活状态'
     ),
     'email_validate' => array(
+        'right' => true,
         'field' => 'boole',
         'widget' => 'Radios',
         'access' => array(
@@ -137,14 +213,13 @@ $settings = array(
         'options' => array(
             '未验证', '已验证'
         ),
-        'attributes' => array(
-            'class' => 'form-control',
-        ),
+        'attributes' => array(),
         'description' => '',
         'error' => '',
         'label' => '邮箱验证'
     ),
     'phone_validate' => array(
+        'right' => true,
         'field' => 'boole',
         'widget' => 'Radios',
         'access' => array(
@@ -160,9 +235,7 @@ $settings = array(
         'options' => array(
             '未验证', '已验证'
         ),
-        'attributes' => array(
-            'class' => 'form-control',
-        ),
+        'attributes' => array(),
         'description' => '',
         'error' => '',
         'label' => '电话验证'
@@ -180,6 +253,7 @@ $settings = array(
         'minLength' => 2,
         'maxLength' => 20,
         'maxNum' => 20,
+        'left' => true,
         'required' => false,
         'addition' => true,
         'default' => array('user'=>'user'),

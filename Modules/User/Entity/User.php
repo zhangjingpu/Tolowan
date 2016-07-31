@@ -42,13 +42,16 @@ class User extends EntityModel
      */
     protected $changed = false;
 
-    public function beforeValidationOnCreate()
-    {
-        $this->created = time();
+    protected $password;
+
+    public function getPassword(){
+        return $this->password;
     }
 
-    public function beforeSave(){
-        $this->password = $this->getDI()->getSecurity()->hash($this->password);
+    public function setPassword($password){
+        if($this->password != $password){
+            $this->password = $this->getDI()->getSecurity()->hash($password);
+        }
     }
     public function getCreated()
     {

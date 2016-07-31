@@ -1,23 +1,23 @@
 <?php
-function termList($limit, $taxonomy = null, $parent = null)
+function termList($limit = null, $taxonomy = null, $parent = 0, $query = array())
 {
     global $di;
-    $query = array(
-        'limit' => $limit,
+    $query += array(
         'andWhere' => array(),
     );
+    if (!is_null($limit)) {
+        $query['limit'] = $limit;
+    }
     if (!is_null($taxonomy)) {
         $query['andWhere'][] = array(
             'conditions' => '%contentModel% = :contentModel:',
             'bind' => array('contentModel' => $taxonomy),
         );
     }
-    if (!is_null($parent)) {
-        $query['andWhere'][] = array(
-            'conditions' => '%parent% = :parent:',
-            'bind' => array('parent' => $parent),
-        );
-    }
-    $user = $di->getShared('entityManager')->get('term');
-    return $user->find($query);
+    $query['andWhere'][] = array(
+        'conditions' => '%parent% = :parent:',
+        'bind' => array('parent' => $parent),
+    );
+    $term = $di->get('entityManager')->get('term');
+    return $term->find($query);
 }

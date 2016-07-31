@@ -3,7 +3,7 @@ namespace Modules\Taxonomy\Controllers;
 
 use Core\Config;
 use Core\Mvc\Controller;
-use Modules\Taxonomy\Library\Common;
+use Modules\Taxonomy\Library\Form;
 use Modules\Taxonomy\Models\Term;
 
 class AdminController extends Controller
@@ -52,7 +52,7 @@ class AdminController extends Controller
         if ($this->request->isPost() && $this->request->hasPost('rh')) {
             $rh = json_decode($this->request->getPost('rh'));
             $rh = jsonToHierarchy($rh);
-            Common::saveTermSort($rh);
+            Form::saveTermSort($rh);
             $this->flash->success('菜单排序成功');
         }
 

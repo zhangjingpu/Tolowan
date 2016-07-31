@@ -93,6 +93,7 @@ class View extends Pview
                     return 'Modules/' . ucfirst($module) . '/templates/' . $template;
                 }
             }
+            //echo 'Modules/' . ucfirst($module) . '/templates/ajax/' . $template.'<br />';
             if ($this->_currentModule) {
                 if ($this->_isAjax === true) {
                     if ($this->exists('Modules/' . ucfirst($this->_currentModule) . '/templates/ajax/' . $template)) {

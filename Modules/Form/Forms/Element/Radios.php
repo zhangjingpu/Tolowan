@@ -25,12 +25,20 @@ class Radios extends Element
         }
         $output = '';
         $name = $this->getName();
-        $default = $this->getDefault();
+        $value = $this->getValue();
+        $i = 0;
+        $class = '';
         foreach ($this->options as $oKey => $oValue) {
-            $output .= '<div class="element-group radios">';
+            if($i === 0){
+                $class = ' first';
+            }else{
+                $class = '';
+            }
+            $i++;
+            $output .= '<div class="inline radios'.$class.'">';
 
-            if (isset($default[$oKey])) {
-                $output .= '<input type="radio" name="' . $name . '"' . self::attributes($this->getAttributes()) . ' value="' . $oKey . '" check />';
+            if ($oKey == $value) {
+                $output .= '<input type="radio" name="' . $name . '"' . self::attributes($this->getAttributes()) . ' value="' . $oKey . '" checked />';
             } else {
                 $output .= '<input type="radio" name="' . $name . '"' . self::attributes($this->getAttributes()) . ' value="' . $oKey . ' " />';
             }

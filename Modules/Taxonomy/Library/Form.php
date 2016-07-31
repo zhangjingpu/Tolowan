@@ -7,6 +7,66 @@ use Modules\Taxonomy\Models\Term;
 use Modules\Taxonomy\Models\EntityTerm;
 
 class Form{
+
+    //术语排序
+    public static function saveTermSort($hierarchy)
+    {
+        $widget = 1;
+        $start = 1;
+        global $di;
+        //Config::printCode($hierarchy);
+        $db = $di->getShared('db');
+        foreach($hierarchy as $key => $value){
+            $db->begin();
+            $term = Term::findFirst($key);
+            if($start == 1){
+                $widget = $term->widget;
+                if($term->parent != 0){
+                    $term->parent = 0;
+                }
+                $start++;
+                $state = $term->save();
+            }else{
+                $term->parent = 0;
+                $term->widget = $widget;
+                $state = $term->save();
+            }
+            if($state){
+                $db->commit();
+            }else{
+                $db->rollback();
+            }
+            $widget++;
+            if(!empty($value)){
+                $widget = self::_saveTermSort($value,$widget,$term->id);
+            }
+        }
+        return true;
+    }
+    protected static function _saveTermSort($hierarchy,$widget,$parent)
+    {
+        global $di;
+        $db = $di->getShared('db');
+        foreach($hierarchy as $key => $value){
+            $db->begin();
+            $term = Term::findFirst($key);
+            $term->widget = $widget;
+            $term->parent = $parent;
+            $state = $term->save();
+            if($state){
+                $db->commit();
+            }else{
+                $db->rollback();
+            }
+            $widget++;
+            $parent = $term->id;
+            if(!empty($value)){
+                self::_saveTermSort($value,$widget,$parent);
+            }
+        }
+        return $widget;
+    }
+    //术语排序结束
     public static function termInit(&$key,&$element){
         if($element['widget'] == 'Select'){
             $element = self::formTermOptions($element);
@@ -24,8 +84,10 @@ class Form{
             $query['limit'] = $element['limit'];
         }
         if (isset($element['taxonomy'])) {
-            $query['conditions'] = 'contentModel = :contentModel:';
-            $query['bind'] = array('contentModel' => $element['taxonomy']);
+            $query['andWhere'][] = array(
+                'conditions' => 'contentModel = :contentModel:',
+                'bind' => array('contentModel' => $element['taxonomy'])
+            );
         }
         $termEntity = $di->getShared('entityManager')->get('term');
         $termList = $termEntity->find($query);

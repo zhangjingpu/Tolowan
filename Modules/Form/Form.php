@@ -64,7 +64,7 @@ class Form extends Pform
             $this->_attributes['data-toggle'] = 'validator';
         }
         if (is_object($data)) {
-            $data = (array)$data;
+            $data = (array) $data;
         }
         if (empty($data)) {
             switch ($this->formEntity['form']['method']) {
@@ -232,8 +232,10 @@ class Form extends Pform
         if (isset($element['access'])) {
             if ($this->getDI()->getSecurity()->isCanAccess($element['access']) === false) {
                 $element['isCanAccess'] = false;
+                return false;
             }
         }
+        $element['name'] = $name;
         if (!isset($this->_data[$name])) {
             $this->_data[$name] = '';
         }
@@ -241,10 +243,7 @@ class Form extends Pform
             return false;
         }
         if (isset(FormInit::$element[$element['widget']])) {
-            $field = FormInit::callElement($this, array(
-                'key' => $name,
-                'value' => $element,
-            ));
+            $field = FormInit::callElement($this, $element);
             if ((!isset($this->_data[$name]) || empty($this->_data[$name])) && isset($element['default'])) {
                 $this->_data[$name] = $element['default'];
             }
@@ -269,6 +268,10 @@ class Form extends Pform
             }
             $this->add($field);
         }
+    }
+
+    public function isExistElement($element){
+        return isset($this->_elements[$element]);
     }
 
     public function renderForm($module = 'form')
@@ -336,8 +339,9 @@ class Form extends Pform
         return '<input type="hidden" name="' . $this->getTokenKey() . '" value="' . $this->getToken() . '" />';
     }
 
-    public function saveBefore($hook=null){
-        if(is_null($hook)){
+    public function saveBefore($hook = null)
+    {
+        if (is_null($hook)) {
             $hook = 'form:save';
         }
         $this->getDI()->getEventsManager()->fire($hook, $this);
@@ -477,6 +481,11 @@ class Form extends Pform
         }
         $output .= '<input type="hidden" name="' . $this->formId . '" value="' . $this->formId . '" />';
         return $output;
+    }
+
+    public function end()
+    {
+        return '</form>';
     }
 
     public function error($key)

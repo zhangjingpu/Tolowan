@@ -12,10 +12,10 @@
                 </li>
                     {% endif %}
                 <li>发表：{{ timeTran(data.changed) }}</li>
-                <li>围观(413)</li>
+                <li>围观({{ data.browse }})</li>
                 <!-- 获得评论数函数默认是wordpress自带的 -->
                 <li>
-                    <a href="#comments">评论(2)</a>
+                    <a href="#comments">评论({{ data.comment_num }})</a>
                 </li>
             </ul>
         </div>

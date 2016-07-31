@@ -16,21 +16,12 @@
                         <td>{{ item['name'] }}</td>
                         <td>{{ item['description'] }}</td>
                         <td>
-                            <p><span>需求：</span>
-                            {% for v in item['require'] %}
-                                {% if data[v] is defined %}
-                                    <span class="label label-success">{{ v }}</span>
-                                {% else %}
-                                    <span class="label label-danger">{{ v }}</span>
-                                {% endif %}
-                            {% endfor %}
+                            <p><span>需求：</span> {% if item['require'] is defined %} {% for v in item['require'] %} {% if data[v] is defined %}
+                                <span class="label label-success">{{ v }}</span> {% else %}
+                                <span class="label label-danger">{{ v }}</span> {% endif %} {% endfor %} {% endif %}
                             </p>
-                            <p><span>冲突：</span>
-                            {% for v in item['conflict'] %}
-                                {% if data[v] is defined %}
-                                    <span class="label label-danger">{{ v }}</span>
-                                {% endif %}
-                            {% endfor %}
+                            <p><span>冲突：</span> {% if item['conflict'] is defined %} {% for v in item['conflict'] %} {% if data[v] is defined %}
+                                <span class="label label-danger">{{ v }}</span> {% endif %} {% endfor %} {% endif %}
                             </p>
                         </td>
                         <td>

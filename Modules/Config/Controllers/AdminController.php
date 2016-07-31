@@ -19,9 +19,9 @@ class AdminController extends Controller
     {
         extract($this->variables['router_params']);
         $entity = $this->entityManager->get('configList');
-        $contentModelInfo = $entity->getContentModelInfo($contentModel);
         $entityEditForm = $entity->addForm($contentModel);
         $content = array();
+        $contentModelInfo = $entity->getContentModelInfo($contentModel);
         $label = $contentModelInfo['modelName'];
         $data = $entity->find(array('contentModel' => $contentModel));
         $this->variables['title'] = $contentModelInfo['modelName'];

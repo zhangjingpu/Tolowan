@@ -14,7 +14,7 @@
                 <a class="btn btn-primary signin-loader" href="{{ url(['for':'login']) }}">立即登录</a>
                 <a class="btn btn-default signup-loader" href="{{ url(['for':'register']) }}">现在注册</a>
             {% else %}
-                <a class="btn btn-primary signin-loader" href="{{ url(['for':'userManager']) }}">用户中心</a>
+                <a class="btn btn-primary signin-loader" href="#">用户中心</a>
                 {% if user.isAdmin() == true %}
                     <a class="btn btn-default signup-loader" href="{{ url(['for':'adminFrame']) }}">管理后台</a>
                 {% endif %}
@@ -28,7 +28,7 @@
 <section class="widget">
     <h3 class="widget-title"><span class="cat">最新文章</span></h3>
     <div class="list-group node-list">
-         {% for item in entity_list('node',['limit':7]) %}
+         {% for item in entityList('node',['limit':7]) %}
         <a target="_blank" title="{{ item.title }}" href="{{ url(['for':'node','id':item.id]) }}">
             <div class="time">
                 <span class="r">{{ date('d',item.changed) }}</span>/
@@ -42,7 +42,7 @@
 <section class="widget">
     <h3 class="widget-title"><span class="cat">最近评论</span></h3>
     <div class="list-group comment-list">
-         {% for item in entity_list('comment',['limit':7]) %}
+         {% for item in entityList('comment',['limit':7]) %}
         <a target="_blank" title="{{ item.node.title }}" href="{{ url(['for':'node','id':item.nid]) }}">
             <img alt="{{ item.user.name }}"
                     src="http://vince.qiniudn.com/wp-content/uploads/2016/04/Screenshot.png?imageView2/2/w/400/h/200">

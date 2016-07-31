@@ -14,18 +14,17 @@ class CommentManager extends Manager
         return false;
     }
 
-    public function saveBefore($form)
+    public function saveBefore()
     {
         if (!$this->user->isLogin()) {
             $this->flash->error('请登陆后评论');
             return false;
         }
-        return $form;
     }
 
-    public function saveAfter($entityModel, $entityForm)
+    public function saveAfter()
     {
-        if ($entityModel) {
+        if ($this->entityModel) {
             $nodeConfig = Config::get('m.node.config');
             if (isset($nodeConfig['comment_num']) && $nodeConfig['comment_num'] == true) {
                 $nodeEntity = $this->entityManager->get('node');
@@ -36,6 +35,6 @@ class CommentManager extends Manager
                 }
             }
         }
-        parent::saveAfter($entityModel, $entityForm);
+        parent::saveAfter();
     }
 }

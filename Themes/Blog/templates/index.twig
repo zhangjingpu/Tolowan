@@ -1,7 +1,7 @@
 {% extends "Themes/Blog/templates/page.twig" %}
 {% block body %}
     <!--single article-->
-    {% for item in entity_list('node',['limit':10]) %}
+    {% for item in entityList('node',['limit':10]) %}
         <div class="article">
             <div class="articleHeader">
                 <h1 class="articleTitle">

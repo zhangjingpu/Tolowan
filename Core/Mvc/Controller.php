@@ -37,8 +37,13 @@ class Controller extends Pcontroller
         $this->view->disable();
         $this->response->setStatusCode(302, 'Temporarily Moved');
         if ($url != false) {
-            $this->response->redirect($url);
+            if (is_array($url)) {
+                $url = $this->url->get($url);
+            }
+        }else{
+            $url = $this->request->getHTTPReferer();
         }
+        $this->response->redirect($url);
         return false;
     }
 
@@ -49,8 +54,10 @@ class Controller extends Pcontroller
             if (is_array($url)) {
                 $url = $this->url->get($url);
             }
-            $this->response->redirect($url);
+        }else{
+            $url = $this->request->getHTTPReferer();
         }
+        $this->response->redirect($url);
         return false;
     }
 

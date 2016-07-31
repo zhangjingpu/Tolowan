@@ -101,6 +101,10 @@ class EntityModel extends Model
 
     public $saveState;
 
+    protected $changed;
+
+    protected $created;
+
     /**
      * entity content model
      *
@@ -116,7 +120,7 @@ class EntityModel extends Model
 
     public function initialize()
     {
-        $this->_fields = $this->getDI()->getEntityManager()->get($this->_entityId)->getFields();
+        $this->_fields = fieldsInit($this->getDI()->getEntityManager()->get($this->_entityId)->getFields());
         foreach ($this->_fields as $fieldKey => $field) {
             if (isset($field['addition']) && $field['addition'] == true) {
                 $fieldModelName = isset($field['model']) ? $field['model'] : '\Models\\' . ucfirst($this->_entityId) . 'Field' . ucfirst($fieldKey);
@@ -137,6 +141,21 @@ class EntityModel extends Model
                 }
             }
         }
+    }
+
+
+
+    public function beforeValidationOnCreate()
+    {
+        if (!$this->created) {
+            $this->created = time();
+        }
+        $this->changed = time();
+    }
+
+    public function beforeValidationOnUpdate()
+    {
+        $this->changed = time();
     }
 
     public function getTitle()
@@ -206,7 +225,7 @@ class EntityModel extends Model
         $actionMenu = array();
         $nodeType = $this->getContentModelList();
         foreach ($nodeType as $key => $value) {
-            $value['access'] = (string) $value['access'];
+            $value['access'] = (string)$value['access'];
             if (isset($value['access']) && $value['access'][0] == 1) {
                 $actionMenu[$key] = array(
                     'href' => $di->getShared('url')->get(array('for' => 'adminEntityEdit', 'entity' => 'node', 'contentModel' => $key, 'id' => 0)),
@@ -285,9 +304,9 @@ class EntityModel extends Model
 
     public function setFields($fields = array())
     {
-        if(isset($this->contentModel) && $this->contentModel){
+        if (isset($this->contentModel) && $this->contentModel) {
             $this->_fields = $this->getDI()->getEntityManager()->get($this->_entityId)->getFields($this->contentModel);
-        }else{
+        } else {
             $this->_fields = $this->getDI()->getEntityManager()->get($this->_entityId)->getFields();
         }
     }

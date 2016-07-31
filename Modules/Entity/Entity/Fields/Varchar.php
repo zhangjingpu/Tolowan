@@ -15,7 +15,7 @@ class Varchar extends Field
 
     public function afterSave()
     {
-        if (isset($this->_options['fullTextSearch']) && $this->_options['fullTextSearch'] === true && isset($this->_options['entity']) && isset($this->_options['field'])) {
+        if (isset($this->_options['fullTextSearch']) && $this->_options['fullTextSearch'] === true && isset($this->_options['entityId']) && isset($this->_options['fieldName'])) {
             $params = array(
                 'entity' => $this->_options['entity'],
                 'field' => $this->_options['fieldName'],

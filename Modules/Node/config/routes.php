@@ -26,8 +26,8 @@ $settings = array(
         'httpMethods' => array('GET', 'POST'),
         'pattern' => '/node_love/{id:([1-9]{1}[0-9]{0,11})}',
         'paths' => array(
-            'controller' => 'Index',
-            'action' => 'Index',
+            'controller' => 'User',
+            'action' => 'Love',
             'module' => 'node',
             'namespace' => 'Modules\Node\Controllers',
         ),
@@ -38,6 +38,36 @@ $settings = array(
         'paths' => array(
             'controller' => 'Index',
             'action' => 'Type',
+            'module' => 'node',
+            'namespace' => 'Modules\Node\Controllers',
+        ),
+    ),
+    'nodeAdd' => array(
+        'httpMethods' => array('GET', 'POST'),
+        'pattern' => '/node/add/{contentModel:([a-z]{2,})}',
+        'paths' => array(
+            'controller' => 'User',
+            'action' => 'Add',
+            'module' => 'node',
+            'namespace' => 'Modules\Node\Controllers',
+        ),
+    ),
+    'nodeEditor' => array(
+        'httpMethods' => array('GET', 'POST'),
+        'pattern' => '/node/editor/{id:([1-9]{1}[0-9]{0,11})}',
+        'paths' => array(
+            'controller' => 'User',
+            'action' => 'Editor',
+            'module' => 'node',
+            'namespace' => 'Modules\Node\Controllers',
+        ),
+    ),
+    'nodeDelete' => array(
+        'httpMethods' => array('GET', 'POST'),
+        'pattern' => '/node/delete/{id:([1-9]{1}[0-9]{0,11})}',
+        'paths' => array(
+            'controller' => 'User',
+            'action' => 'Delete',
             'module' => 'node',
             'namespace' => 'Modules\Node\Controllers',
         ),

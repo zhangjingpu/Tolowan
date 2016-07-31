@@ -17,6 +17,7 @@ class IndexController extends Controller
     {
         extract($this->variables['router_params']);
         $nodeEntity = $this->entityManager->get('node');
+        $nodeContentModelList = $nodeEntity->getContentModelList();
         $data = $nodeEntity->findFirst($id, true);
         if (!$data) {
             return $this->notFount();
@@ -33,6 +34,8 @@ class IndexController extends Controller
                 'pageNode-' . $data->contentModel,
                 'pageNode-' . $id,
             ),
+            'contentModelList' => $nodeContentModelList,
+            'contentModelInfo' => $nodeContentModelList[$data->contentModel],
             'contentModel' => $data->contentModel,
             'data' => $data,
         );
@@ -103,9 +106,10 @@ class IndexController extends Controller
         $this->variables += array(
             '#templates' => array(
                 'pageNodeTerm',
+                'pageNodeTerm-' . $term->contentModel,
                 'pageNodeTerm-' . $id,
-                'pageNodeTerm-' . $id . '-' . $page,
             ),
+            'contentModel' => $term->contentModel,
             'id' => $id,
             'page' => $page,
             'term' => $term,

@@ -2,6 +2,7 @@
 namespace Modules\Node\Entity;
 
 use Modules\Entity\Entity\EntityModel;
+use Phalcon\Mvc\Model\Relation;
 
 /**
  *
@@ -42,23 +43,18 @@ class Node extends EntityModel
      */
     protected $changed = false;
 
+    protected $_isLove = null;
+
     public function initialize()
     {
         parent::initialize();
+        $this->belongsTo('uid', '\Modules\User\Entity\User', 'id', array(
+            'alias' => 'user',
+            'foreignKey' => array(
+                'action' => Relation::ACTION_CASCADE,
+            ),
+        ));
         // Skips only when inserting
-    }
-
-    public function beforeValidationOnCreate()
-    {
-        if (!$this->created) {
-            $this->created = time();
-        }
-        $this->changed = time();
-    }
-
-    public function beforeValidationOnUpdate()
-    {
-        $this->changed = time();
     }
 
     public function getCreated()
@@ -67,6 +63,14 @@ class Node extends EntityModel
             $this->created = time();
         }
         return $this->created;
+    }
+
+    public function beforeValidationOnCreate()
+    {
+        if (!$this->uid) {
+            $this->uid = $this->getDI()->getUser()->id;
+        }
+        parent::beforeValidationOnCreate();
     }
 
     /**
@@ -110,6 +114,49 @@ class Node extends EntityModel
         return $output[$this->state];
     }
 
+    public function renderTop(){
+        if($this->top){
+            return '置顶';
+        }
+        return false;
+    }
+
+    public function renderEssence(){
+        if($this->essence){
+            return '精华';
+        }
+        return false;
+    }
+
+    public function renderHot(){
+        if($this->hot){
+            return '热点';
+        }
+        return false;
+    }
+
+    public function isLove(){
+        if(is_null($this->_isLove) === false){
+            return $this->_isLove;
+        }
+        if(!$this->getDI()->getUser()->isLogin()){
+            $this->_isLove = false;
+            return false;
+        }
+        $userLog = \Modules\User\Models\UserLog::findFirst(array(
+            'conditions' => 'uid = :uid: AND type = :type:',
+            'bind' => array(
+                'uid' => $this->getDI()->getUser()->id,
+                'type' => 'node-love-' . $this->id
+            )
+        ));
+        if($userLog){
+            $this->_isLove = true;
+            return true;
+        }
+        $this->_isLove = false;
+        return false;
+    }
     /**
      * @param $form
      */

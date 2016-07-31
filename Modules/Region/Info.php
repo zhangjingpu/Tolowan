@@ -1,11 +1,15 @@
 <?php
-$info = array(
+$settings = array(
     'name' => '区块',
-    'machine' => 'menu',
+    'machine' => 'region',
     'uninstall' => false,
-    'description' => '豫之旗菜单组件。',
+    'description' => 'Tolowan区块组件。',
     'handle' => array(
-        'setting' => array('name' => '设置', 'link' => '/'),
-        'quanxian' => array('name' => '权限', 'link' => '/'),
+        'setting' => false,
+        'install' => false,
+        'startUsing' => false,
+        'stopUsing' => false,
+        'uninstall' => false,
+        'delete' => false,
     ),
 );

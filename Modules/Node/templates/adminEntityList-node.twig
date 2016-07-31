@@ -14,9 +14,7 @@
                 <th class="center">类型</th>
                 <th class="center">用户</th>
                 <th class="center">状态</th>
-                <th class="center">置顶</th>
-                <th class="center">热点</th>
-                <th class="center">精华</th>
+                <th class="center">属性</th>
                 <th class="center">创建时间</th>
                 <th class="center">最近更改</th>
                 <th class="center">操作</th>
@@ -30,27 +28,37 @@
                                 class="lbl"></span>
                     </td>
                     <td class="center">{{ item.id }}</td>
-                    <td class="center"><a href="{{ url(['for':'entity','entity':'node','id':item.id]) }}"
-                                          data-toggle="tooltip" target="_blank" data-placement="right"
-                                          title="访问{{ item.title }}">{{ item.title }}</a></td>
-                    <td class="center"><a data-target="#main" href="{{ url }}?type={{ item.contentModel }}"
-                                          data-toggle="tooltip" target="_blank" data-placement="right"
-                                          title="只查看类型文章">{{ getVar(item,'contentModel') }}</a></td>
-                    <td class="center">{% if item.uid %}<a data-target="#main" href="{{ url }}?uid={{ item.uid }}" data-toggle="tooltip"
-                                          target="_blank" data-placement="right"
-                                          title="只查看该用户文章">{{ item.getEntity('uid').name }}</a>{% else %}匿名用户{% endif %}</td>
-                    <td class="center"><a data-target="#main" href="{{ url }}?state={{ item.state }}"
-                                          data-toggle="tooltip" target="_blank" data-placement="right"
-                                          title="只查看{{ getVar(item,'state') }}文章">{{ getVar(item,'state') }}</a></td>
-                    <td class="center">{{ item.top }}</td>
-                    <td class="center">{{ item.hot }}</td>
-                    <td class="center">{{ item.essence }}</td>
-                    <td class="center">{{ item.created }}</td>
-                    <td class="center">{{ item.changed }}</td>
                     <td class="center">
+                        <a href="{{ url(['for':'node','id':item.id]) }}" data-toggle="tooltip" target="_blank" data-placement="right" title="访问{{ item.title }}">{{ item.title }}</a>
+                    </td>
+                    <td class="center">
+                        <a data-target="#main" href="{{ staticUrl(['adminNodeFilterForm':'adminNodeFilterForm','contentModel':item.contentModel]) }}" data-toggle="tooltip" target="_blank" data-placement="right" title="只查看{{ getVar(item,'contentModel') }}内容">{{ contentModelList[item.contentModel]['modelName'] }}</a>
+                    </td>
+                    <td class="center">
+                        {% if item.uid %}
+                            <a data-target="#main" href="{{ staticUrl(['adminNodeFilterForm':'adminNodeFilterForm','uid':item.uid]) }}" data-toggle="tooltip" target="_blank" data-placement="right" title="只查看{{ item.user.name }}的文章">{{ item.user.name }}</a>
+                        {% else %}
+                            匿名用户
+                        {% endif %}
+                    </td>
+                    <td class="center">
+                        <a data-target="#main" href="{{ staticUrl(['adminNodeFilterForm':'adminNodeFilterForm','state':item.state]) }}" data-toggle="tooltip" target="_blank" data-placement="right" title="只查看{{ getVar(item,'state') }}文章">{{ getVar(item,'state') }}</a>
+                    </td>
+                    <td class="center">
+                        {% for attr in ['top','hot','essence'] %}
+                            {% set isAttr = false %}
+                            {% if getVar(item,attr) %}
+                                {% set isAttr = true %}
+                                <span class="label label-primary">{{ getVar(item,attr) }}</span>
+                            {% endif %}
+                        {% endfor %}
+                        {% if isAttr == false %}<span class="label label-default">莫名的感伤</span>{% endif %}
+                    </td>
+                    <td class="center">{{ timeTran(item.created) }}</td>
+                    <td class="center">{{ timeTran(item.changed) }}</td>
+                    <td>
                         {% for key,link in item.links() %}
-                            <a href="{{ url(link['href']) }}" class="btn btn-xs btn-{{ link['icon'] }}"
-                               data-target="#main">{{ link['name'] }}</a>
+                            <a href="{{ url(link['href']) }}" class="btn btn-xs btn-{{ link['icon'] }}" data-target="#main">{{ link['name'] }}</a>
                         {% endfor %}
                     </td>
                 </tr>

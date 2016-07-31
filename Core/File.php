@@ -163,10 +163,11 @@ class File
     public static function rm($path, $r = false)
     {
         $output = array();
-        if (!file_exists($path)) {
+        $absolutePath = ROOT_DIR.$path;
+        if (!file_exists($absolutePath)) {
             return true;
         }
-        if (is_dir(ROOT_DIR . $path) && $r) {
+        if (is_dir($absolutePath) && $r) {
             if (self::clearDir($path) && rmdir($path)) {
                 return true;
             } else {

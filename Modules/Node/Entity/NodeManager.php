@@ -26,13 +26,13 @@ class NodeManager extends Manager
         return $links;
     }
 
-    public function saveBefore($entityForm)
+    public function saveBefore()
     {
-        $data = $entityForm->getData();
+        $data = $this->entityForm->getData();
         if (!isset($data['uid']) || empty($data['uid'])) {
             $data['uid'] = $this->user->id;
         }
-        $entityForm->setData($data);
-        parent::saveBefore($entityForm);
+        $this->entityForm->setData($data);
+        parent::saveBefore($this->entityForm);
     }
 }

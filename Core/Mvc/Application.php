@@ -7,6 +7,10 @@ use Phalcon\Mvc\Application\Exception;
 
 class Application extends Papplication
 {
+    public function callMacro($name, $arguments=array()){
+        return $this->volt->callMacro($name, $arguments);
+    }
+
     public function handle($uri = null)
     {
         $this->uri = $uri;

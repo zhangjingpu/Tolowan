@@ -46,6 +46,19 @@
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <li class="dropdown user user-menu">
+                        <a href="#" class="dropdown-toggle bell-red" data-toggle="dropdown">
+                            <i class="fa fa-tasks"></i>
+                            <span class="badge badge-important">0</span>
+                        </a>
+                        <ul class="dropdown-menu bell-list" id="bell-ul">
+                            <!-- queue list -->
+                                <li class="dropdown-header">
+                                    <i class="fa fa-bell"></i>
+                                    <b id="bell-num">0</b>条通知
+                                </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-search"></i>
                         </a>
@@ -110,7 +123,6 @@
          immediately after the control sidebar -->
     <div class="control-sidebar-bg"></div>
 </div>
-<div id="notice">没有消息</div>
 <!-- ./wrapper -->
 <link rel="stylesheet" href="/library/js/loadding-bar/css/loadingbar.css">
 <link rel="stylesheet" href="/library/tabledrag/assets/jquery.tabledrag.css">

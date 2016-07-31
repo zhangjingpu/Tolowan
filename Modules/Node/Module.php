@@ -19,7 +19,16 @@ function nodeSearch($query)
         }
     }
 }
-
+function nodeRender($node){
+    return array(
+        '#templates' => array(
+            'node',
+            'node-'.$node->contentModel,
+            'node-'.$node->id,
+        ),
+        'data' => $node
+    );
+}
 function nodeList($query)
 {
     global $di;

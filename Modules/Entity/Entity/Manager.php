@@ -18,10 +18,28 @@ class Manager extends Plugin
     protected $_entityInfo;
     protected $_connect = 'db';
     protected $_query;
+    protected $_isNew = false;
+    protected $_isSaveSuccess = null;
+    public $entityForm;
+    public $entityModel;
 
     public function __construct()
     {
         $this->_entityInfo = $this->getDI()->getEntityManager()->getEntityInfo($this->_entityId);
+    }
+
+    public function isSaveSuccess(){
+        return $this->_isSaveSuccess;
+    }
+
+    public function getEntityId()
+    {
+        return $this->_entityId;
+    }
+
+    public function getModule()
+    {
+        return $this->_module;
     }
 
     protected function paramsValidate($query)
@@ -45,11 +63,11 @@ class Manager extends Plugin
         $addFormInfo = $this->getFields($contentModel);
         $addFormInfo['settings']['contentModel'] = $contentModel;
         $data['contentModel'] = $contentModel;
-        $entityForm = $di->getShared('form')->create($addFormInfo, $data);
-        if ($entityForm->isValid()) {
-            $this->save($entityForm);
+        $this->entityForm = $di->getShared('form')->create($addFormInfo, $data);
+        if ($this->entityForm->isValid()) {
+            $this->save();
         }
-        return $entityForm;
+        return $this->entityForm;
     }
 
     public function editForm($contentModel = null, $id = null)
@@ -60,7 +78,7 @@ class Manager extends Plugin
             if (method_exists($data, 'toArray')) {
                 $data = $data->toArray();
             } else {
-                $data = (array)$data;
+                $data = (array) $data;
             }
         }
         if (is_null($contentModel) && isset($data['contentModel'])) {
@@ -72,59 +90,59 @@ class Manager extends Plugin
         $addFormInfo['settings']['contentModel'] = $contentModel;
         $addFormInfo['settings']['id'] = $id;
         $addFormInfo['contentModel']['settings']['default'] = $contentModel;
-        $entityForm = $di->getShared('form')->create($addFormInfo, $data);
-        if ($entityForm->isValid()) {
-            $this->save($entityForm);
+        $this->entityForm = $di->getShared('form')->create($addFormInfo, $data);
+        if ($this->entityForm->isValid()) {
+            $this->save();
         }
-        return $entityForm;
+        return $this->entityForm;
     }
 
-    public function saveBefore($entityForm)
+    public function saveBefore()
     {
-        $entityForm->saveBefore('form:entitySave');
-        return $entityForm;
+        $this->_isSaveSuccess = false;
+        $this->eventsManager->fire("entity:saveBefore", $this);
+        return $this->entityForm;
     }
 
-    public function save($entityForm)
+    public function save()
     {
-        if ($entityForm === false) {
+        $this->saveBefore();
+        if ($this->entityForm === false) {
             return false;
         }
-        $options = $entityForm->getUserOptions();
+        $options = $this->entityForm->getUserOptions();
         $entityModelName = $this->_entityInfo['entityModel'];
         $connectName = 'get' . ucfirst($this->_connect);
         $db = $this->getDI()->{$connectName}();
         $db->begin();
         if (isset($options['id'])) {
-            $entityModel = $entityModelName::findFirst($options['id']);
-            if (!$entityModel) {
+            $this->entityModel = $entityModelName::findFirst($options['id']);
+            if (!$this->entityModel) {
                 throw new Exception('内容不存在');
             }
         } else {
-            $entityModel = new $entityModelName();
+            $this->entityModel = new $entityModelName();
         }
-        $data = $entityForm->getData();
-        $entityModel->contentModel = $options['contentModel'];
-        foreach ($entityForm->getElements() as $fieldKey => $field) {
+        $data = $this->entityForm->getData();
+        $this->entityModel->contentModel = $options['contentModel'];
+        foreach ($this->entityForm->getElements() as $fieldKey => $field) {
             $elementOptions = $field->getUserOptions();
             if (isset($elementOptions['baseField']) && $elementOptions['baseField'] == true) {
+                //添加基本字段
                 if (isset($data[$fieldKey])) {
-                    $entityModel->{$fieldKey} = $data[$fieldKey];
+                    $this->entityModel->{$fieldKey} = $data[$fieldKey];
                 } elseif (isset($elementOptions['default'])) {
-                    $entityModel->{$fieldKey} = $elementOptions['default'];
+                    $this->entityModel->{$fieldKey} = $elementOptions['default'];
                 }
             } elseif (isset($elementOptions['addition']) && $elementOptions['addition'] == true) {
                 if (!isset($data[$fieldKey]) && isset($elementOptions['default']) && isset($elementOptions['required']) && $elementOptions['required'] == false) {
                     $data[$fieldKey] = $elementOptions['default'];
                 }
-                /*if (!isset($data[$fieldKey]) || empty($data[$fieldKey]) && isset($elementOptions['required']) && $elementOptions['required'] == false) {
-                    break;
-                }*/
                 if (isset($data[$fieldKey])) {
                     if (!isset($elementOptions['model'])) {
                         $elementOptions['model'] = '\Models\\' . ucfirst($this->_entityId) . 'Field' . ucfirst($fieldKey);
                     }
-                    $elementOptions['entity'] = $this->_entityId;
+                    $elementOptions['entityId'] = $this->_entityId;
                     $elementOptions['contentModel'] = $options['contentModel'];
                     $elementOptions['fieldName'] = $fieldKey;
                     $model = $elementOptions['model'];
@@ -133,57 +151,52 @@ class Manager extends Plugin
                         if (is_string($data[$fieldKey])) {
                             $data[$fieldKey] = array($data[$fieldKey]);
                         }
-                        $newData = array();
-                        $fieldList = $model::findByEid($entityModel->id);
-                        $fieldModelLength = count($fieldList);
-                        $dataFieldLength = count($data[$fieldKey]);
-                        if ($fieldModelLength < $dataFieldLength) {
-                            $cha = $dataFieldLength - $fieldModelLength;
-                            $newData = array_slice($data[$fieldKey], $cha - 1);
-                        }
-                        $i = 0;
-                        foreach ($fieldList as $fieldModel) {
-                            if (isset($data[$fieldKey][$i])) {
+                        $newData = $data[$fieldKey];
+                        $fieldList = $model::findByEid($this->entityModel->id);
+                        foreach ($fieldList as $i => $fieldModel) {
+                            if (isset($newData[$i])) {
                                 $fieldModel->setOptions($elementOptions);
-                                $fieldModel->setValue($data[$fieldKey][$i]);
+                                $fieldModel->setValue($newData[$i]);
                                 $fieldModelList[] = $fieldModel;
+                                unset($newData[$i]);
                             } else {
                                 $fieldModel->delete();
                             }
-                            $i++;
                         }
                         foreach ($newData as $value) {
-                            $fieldModel = new $model();
-                            $fieldModel->eid = $entityModel->id;
-                            $fieldModel->setOptions($elementOptions);
-                            $fieldModel->setValue($value);
-                            $fieldModelList[] = $fieldModel;
+                            if ($value) {
+                                $fieldModel = new $model();
+                                $fieldModel->eid = $this->entityModel->id;
+                                $fieldModel->setOptions($elementOptions);
+                                $fieldModel->setValue($value);
+                                $fieldModelList[] = $fieldModel;
+                            }
                         }
                     } else {
-                        $fieldModel = $model::findFirstByEid($entityModel->id);
+                        $fieldModel = $model::findFirstByEid($this->entityModel->id);
                         if (!$fieldModel) {
                             $fieldModel = new $model();
-                            $fieldModel->eid = $entityModel->id;
+                            $fieldModel->eid = $this->entityModel->id;
                         }
                         $fieldModel->setOptions($elementOptions);
                         $fieldModel->setValue($data[$fieldKey]);
                         $fieldModelList = $fieldModel;
                     }
-                    $entityModel->{$fieldKey} = $fieldModelList;
+                    $this->entityModel->{$fieldKey} = $fieldModelList;
                 }
             }
         }
-        if ($entityModel->save()) {
+        if ($this->entityModel->save()) {
             if ($this->getDI()->getEventsManager()->fire('entity:saveAfter', $this) === false) {
                 return false;
             }
             $this->getDI()->getFlash()->success('内容保存成功');
             $db->commit();
-            $this->saveAfter($entityModel, $entityForm);
-            return $entityModel;
+            $this->saveAfter();
+            return $this->entityModel;
         } else {
             $error = '';
-            foreach ($entityModel->getMessages() as $message) {
+            foreach ($this->entityModel->getMessages() as $message) {
                 $error .= $message . "<br>";
             }
             $this->getDI()
@@ -194,9 +207,10 @@ class Manager extends Plugin
         }
     }
 
-    public function saveAfter($entityModel, $entityForm)
+    public function saveAfter()
     {
-        $this->eventsManager->fire("entity:saveAfter", $entityModel, $entityForm);
+        $this->_isSaveSuccess = true;
+        $this->eventsManager->fire("entity:saveAfter", $this);
     }
 
     public function getContentModelInfo($contentModel, $key = null)
@@ -258,7 +272,7 @@ class Manager extends Plugin
             }
         }
         if (!is_null($contentModel)) {
-            $baseFields['formId'] = $this->_entityId . ucfirst($contentModel);
+            $baseFields['settings']['contentModel'] = $contentModel;
         }
         return $baseFields;
     }
@@ -276,8 +290,8 @@ class Manager extends Plugin
     {
         $modelList = Config::cache('modelsManager');
         $fields = $this->getFields();
-        $entityForm = $this->getDI()->getForm()->create($fields);
-        $fieldElements = $entityForm->getElements();
+        $this->entityForm = $this->getDI()->getForm()->create($fields);
+        $fieldElements = $this->entityForm->getElements();
         $modelClassName = $this->_entityInfo['entityModel'];
         $columns = $modelList[$this->_entityId]['columns'];
         $this->_query = $modelClassName::query();
@@ -390,11 +404,12 @@ class Manager extends Plugin
 
             return $output->getPaginate();
         }
-        if (isset($query['limit'])) {
-            if ($query['limit'] == 1) {
+
+        if (isset($query['limit']) === true) {
+            if ($query['limit'] === 1) {
                 return $this->_query->execute();
             } else {
-                $this->_query = $this->_query->limit(intval($query['limit']));
+                $this->_query = $this->_query->limit($query['limit']);
             }
         }
         return $this->_query->execute();
@@ -412,14 +427,11 @@ class Manager extends Plugin
         }
         $contentModel = $entityModel->contentModel;
         $output = $entityModel->toArray();
-        $fields = $this->getFields($contentModel);
-        $fieldForm = $this->getDI()->getForm()->create($fields);
-        foreach ($fieldForm->getElements() as $key => $field) {
-            $fieldOptions = $field->getUserOptions();
-            if (isset($fieldOptions['addition']) && $fieldOptions['addition'] == true) {
-                $fieldModelName = isset($fieldOptions['model']) ? $fieldOptions['model'] : '\Models\\' . ucfirst($this->_entityId) . 'Field' . ucfirst($key);
-
-                $output[$key] = call_user_func_array($fieldModelName . '::filterValue', array($entityModel->{$key}, $fieldOptions));
+        $fields = fieldsInit($this->getFields($contentModel));
+        foreach ($fields as $key => $field) {
+            if (isset($field['addition']) && $field['addition'] == true && isset($entityModel->{$key})) {
+                $fieldModelName = isset($field['model']) ? $field['model'] : '\Models\\' . ucfirst($this->_entityId) . 'Field' . ucfirst($key);
+                $output[$key] = call_user_func_array($fieldModelName . '::filterValue', array($entityModel->{$key}, $field));
 
             }
         }
@@ -435,14 +447,16 @@ class Manager extends Plugin
 
     public function submitFilterForm($filterForm, $query)
     {
-        $data = $filterForm->getData;
+        $data = $filterForm->getData();
         foreach ($data as $key => $value) {
-            $query['andWhere'][] = array(
-                'conditions' => "%$key% = :$key:",
-                'bind' => array(
-                    $key => $value,
-                ),
-            );
+            if ($value != 'null' && !empty($value)) {
+                $query['andWhere'][] = array(
+                    'conditions' => "%$key% = :$key:",
+                    'bind' => array(
+                        $key => $value,
+                    ),
+                );
+            }
         }
         return $query;
     }

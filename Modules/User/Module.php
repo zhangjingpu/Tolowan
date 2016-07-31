@@ -18,3 +18,16 @@ function userList($query){
     $user = $di->getShared('entityManager')->getEntity('user');
     return $user->gets($query);
 }
+function isExistUserLog($uid,$type){
+    $userLog = \Modules\User\Models\UserLog::findFirst(array(
+        'conditions' => 'uid = :uid: AND type = :type:',
+        'bind' => array(
+            'uid' => $uid,
+            'type' => $type
+        )
+    ));
+    if($userLog){
+        return true;
+    }
+    return false;
+}

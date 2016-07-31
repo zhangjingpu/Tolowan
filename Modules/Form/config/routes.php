@@ -10,4 +10,14 @@ $settings = array(
             'namespace' => 'Modules\Form\Controllers',
         ),
     ),
+    'autoSource' => array(
+        'httpMethods' => 'GET',
+        'pattern' => '/auto_source/{id:([a-z_A-Z]{2,})}/{word}',
+        'paths' => array(
+            'controller' => 'Index',
+            'action' => 'autoSource',
+            'module' => 'form',
+            'namespace' => 'Modules\Form\Controllers',
+        ),
+    ),
 );

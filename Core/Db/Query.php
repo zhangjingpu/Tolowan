@@ -8,7 +8,7 @@ use Phalcon\Db\Exception;
 
 class Query
 {
-    public static $modelsList = null;
+    public static $modelsList = false;
 
     /*
      **$query array 检索条件
@@ -26,37 +26,93 @@ class Query
      */
     public static function find($query)
     {
-        if (!isset($query['from'])) {
-            throw new Exception('At least one model is required to build the query');
+        if (self::$modelsList === false) {
+            self::$modelsList = Config::cache('modelsManager');
         }
-        $sql = new Builder();
-        $sql->from($query['from']);
-        foreach (array('join', 'leftJoin', 'rightJoin') as $value) {
+        if (!isset($query['from']['id']) || !isset(self::$modelsList[$query['from']['id']])) {
+            return false;
+        }
+        if (isset($query['columns'])) {
+            $columns = $query['columns'];
+        } else {
+            if (isset($query['from']['columns'])) {
+                $columns = &$query['from']['columns'];
+            } else {
+                $columns = self::$modelsList[$query['from']['id']]['columns'];
+            }
+        }
+
+        global $di;
+
+        $sql = $di->getShared('modelsManager')->createBuilder()->from(array($query['from']['id'] => self::$modelsList[$query['from']['id']]['entity']));
+
+        foreach (array('join', 'leftJoin', 'rightJoin', 'innerJoin') as $value) {
             if (isset($query[$value]) && !empty($query[$value]) && is_array($query[$value])) {
-                foreach ($query[$value] as $item) {
-                    if (isset($item['id']) && isset($item['conditions']) && isset($item['id'])) {
-                        $sql->{$value}($item['id'], $item['conditions'], $item['id']);
+                foreach ($query[$value] as $vvalue) {
+                    if (isset(self::$modelsList[$vvalue['id']])) {
+                        $sql = $sql->{$value}(self::$modelsList[$vvalue['id']]['entity'], $vvalue['conditions'], $vvalue['id']);
+                        if (isset($vvalue['columns']) && is_array($vvalue['columns'])) {
+                            $columns = array_merge($columns, $vvalue['columns']);
+                        } else {
+                            $joinColumns = self::$modelsList[$vvalue['id']]['columns'];
+                            if (isset($vvalue['exColumns']) && is_array($vvalue['exColumns'])) {
+                                foreach ($vvalue['exColumns'] as $ec) {
+                                    $ek = array_search($ec, $joinColumns);
+                                    if ($ek !== false) {
+                                        unset($joinColumns[$ek]);
+                                    }
+                                }
+                            }
+                            $columns = array_merge($columns, $joinColumns);
+                        }
+                    }
+                }
+                unset($joinColumns);
+            }
+        }
+
+        foreach (array('where', 'andWhere', 'orWhere') as $value) {
+            if (isset($query[$value]) && !empty($query[$value]) && is_array($query[$value])) {
+                foreach ($query[$value] as $vvalue) {
+                    if (!isset($vvalue['type'])) {
+                        $vvalue['type'] = null;
+                    }
+                    if (isset($vvalue['conditions']) && isset($vvalue['bind'])) {
+                        $sql = $sql->{$value}($vvalue['conditions'], $vvalue['bind'], $vvalue['type']);
                     }
                 }
             }
         }
-        foreach (array('where', 'andWhere', 'inWhere', 'orWhere', 'betweenWhere', 'notBetweenWhere', 'notInWhere') as $value) {
+
+        foreach (array('inWhere', 'notInWhere') as $value) {
             if (isset($query[$value]) && !empty($query[$value]) && is_array($query[$value])) {
-                foreach ($query[$value] as $item) {
-                    if (isset($item[2])) {
-                        $sql->{$value}($item[0], $item[1], $item[2]);
-                    } elseif (isset($item[1])) {
-                        $sql->{$value}($item[0], $item[1]);
+                foreach ($query[$value] as $vvalue) {
+                    if (!isset($vvalue['type'])) {
+                        $vvalue['type'] = null;
+                    }
+                    if (isset($vvalue['conditions']) && isset($vvalue['bind'])) {
+                        $sql = $sql->{$value}($vvalue['conditions'], $vvalue['bind']);
                     }
                 }
             }
         }
+
+        if (isset($query['match']) && !empty($query['match']) && is_array($query['match'])) {
+            foreach ($query['match'] as $item) {
+                $sql = $sql->andWhere($item['conditions'], $item['bind']);
+            }
+        }
+
+        $sql = $sql->columns($columns);
         if (isset($query['order'])) {
-            $sql->orderBy($query['order']);
+            $sql = $sql->orderBy($query['order']);
+        }
+        if (isset($query['group'])) {
+            $sql = $sql->groupBy($query['group']);
         }
         if (isset($query['paginator']) && $query['paginator'] == true) {
             if (!isset($query['limit'])) {
-                $query['limit'] = 10;
+                $query['limit'] = 20;
             }
             if (!isset($query['page'])) {
                 $query['page'] = 1;
@@ -68,20 +124,14 @@ class Query
             ));
             return $output->getPaginate();
         }
-        if (!isset($query['limit'])) {
-            $query['limit'] = array(0, 10);
-        }
         if (isset($query['limit'])) {
-            if (is_array($query['limit'])) {
-                $sql->orderBy($query['limit'][0], $query['limit'][1]);
+            if ($query['limit'] == 1) {
+                return $sql->getQuery()->getSingleResult();
             } else {
-                $sql = $sql->orderBy($query['limit']);
+                $sql = $sql->limit(intval($query['limit']));
             }
         }
-        Config::printCode($sql->getPhql());
-        $result = $sql->execute();
-        $result->setFetchMode(PDO::FETCH_OBJ);
-        return $result->fetchAll();
+        return $sql->getQuery()->execute();
     }
 
 }

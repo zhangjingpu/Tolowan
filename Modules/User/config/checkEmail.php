@@ -9,8 +9,8 @@ $settings = array(
 		'role' => 'form',
 		'id' => 'login',
 	),
-	'password' => array(
-		'label' => '密码',
+	'email_code' => array(
+		'label' => '验证码',
 		'userOptions' => array(
 			'labelAttributes' => array(
 				'class' => array(),
@@ -27,42 +27,11 @@ $settings = array(
 			),
 		),
 		'error' => '',
-		'description' => '登陆密码',
+		'description' => '您的邮箱收到的验证码',
 		'field' => 'string',
 		'widget' => 'Password',
 		'validate' => array(),
 		'attributes' => array(),
-		'required' => true,
-	),
-	'ConfirmationPassword' => array(
-		'label' => '确认密码',
-		'userOptions' => array(
-			'labelAttributes' => array(
-				'class' => array(),
-			),
-			'groupAttributes' => array(
-				'class' => array(),
-				'id' => 'group_name',
-			),
-			'widgetBoxAttributes' => array(
-				'class' => array(),
-			),
-			'helpAttributes' => array(
-				'class' => array(),
-			),
-		),
-		'error' => '',
-		'description' => '重复之前输入的密码',
-		'field' => 'string',
-		'widget' => 'Password',
-		'validate' => array(),
-		'attributes' => array(
-			array(
-				'v' => 'Confirmation',
-				'with' => 'password',
-				'message' => '前后输入的密码不一样',
-			),
-		),
 		'required' => true,
 	),
 );

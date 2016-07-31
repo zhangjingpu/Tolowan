@@ -44,10 +44,10 @@ class BlockManager extends Manager
         return $entityModel;
     }
 
-    public function save($form)
+    public function save()
     {
-        $data = $form->getData();
-        $formOptions = $form->getUserOptions();
+        $data = $this->entityForm->getData();
+        $formOptions = $this->entityForm->getUserOptions();
         $regionBlockList = Config::get('m.region.blockList-' . $data['region'], array());
         $region = $data['region'];
         $contentModel = $data['contentModel'];

@@ -12,7 +12,7 @@
                 <!--缩略图-->
                 <div class="articleThumb">
                     <a href="{{ url(['for':'node','id':item.id]) }}">
-                        <img src="{% if item.images is defined AND item.images %}{{ item.images }}{% else %}/themes/blog/images/{{ rand(1,11) }}.jpg{% endif %}" alt="{{ item.title }}" class="wp-post-image" width="400" height="200"/>
+                        <img src="{% if item.images is defined AND item.images.value %}{{ item.images }}{% else %}/themes/blog/images/{{ rand(1,11) }}.jpg{% endif %}" alt="{{ item.title }}" class="wp-post-image" width="400" height="200"/>
                     </a>
                 </div>
                 <!--摘要-->

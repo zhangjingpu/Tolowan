@@ -15,6 +15,7 @@ class IndexController extends Controller
         ini_set('disable_functions', '');//开启所有函数
         ignore_user_abort(true); // 后台运行
         set_time_limit(0); // 取消脚本运行时间的超时上限
+        sleep(1);
         $this->view->disable();
         if($id == 0){
             Queue::runAllCron();

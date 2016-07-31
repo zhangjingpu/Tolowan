@@ -33,11 +33,11 @@ class ConfigListManager extends Manager
         $addFormInfo = $this->getFields($contentModel);
         $addFormInfo['settings']['contentModel'] = $contentModel;
         $addFormInfo['contentModel']['settings']['default'] = $contentModel;
-        $addForm = $di->getShared('form')->create($addFormInfo, $data);
-        if ($addForm->isValid()) {
-            $this->save($addForm);
+        $this->entityForm = $di->getShared('form')->create($addFormInfo, $data);
+        if ($this->entityForm->isValid()) {
+            $this->save();
         }
-        return $addForm;
+        return $this->entityForm;
     }
 
     public function editForm($contentModel = null, $id = null)
@@ -49,19 +49,19 @@ class ConfigListManager extends Manager
         $addFormInfo['contentModel']['settings']['default'] = $contentModel;
         $data = $this->findFirst(array('contentModel' => $contentModel, 'id' => $id));
         if (is_object($data)) {
-            $data = (array)$data;
+            $data = (array) $data;
         }
-        $addForm = $di->getShared('form')->create($addFormInfo, $data);
-        if ($addForm->isValid()) {
-            $this->save($addForm);
+        $this->entityForm = $di->getShared('form')->create($addFormInfo, $data);
+        if ($this->entityForm->isValid()) {
+            $this->save();
         }
-        return $addForm;
+        return $this->entityForm;
     }
 
-    public function save($form)
+    public function save()
     {
-        $data = $form->getData();
-        $options = $form->getUserOptions();
+        $data = $this->entityForm->getData();
+        $options = $this->entityForm->getUserOptions();
         $dataList = Config::get($options['data']);
         if (isset($options['id'])) {
             $data['id'] = $options['id'];

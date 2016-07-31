@@ -1,4 +1,4 @@
 <?php
 $site = array(
-	'baidu.com' => 'Baidu',
+    'demo.com' => 'Default',
 );

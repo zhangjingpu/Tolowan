@@ -20,7 +20,8 @@ class File extends Model
         $this->path = $path;
     }
     public function getPath(){
-        if($this->access == 1){
+        $paramsAccess = str_split($this->access, 1);
+        if($paramsAccess[0] == 1){
             return '/'.$this->path;
         }else{
             return $this->path;

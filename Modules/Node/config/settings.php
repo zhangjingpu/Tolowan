@@ -9,6 +9,21 @@ $settings = array(
         'role' => 'form',
         'id' => 'adminNodeSettingsForm',
     ),
+    'browse' => array(
+        'label' => '浏览统计',
+        'userOptions' => array(),
+        'description' => '启用浏览统计',
+        'field' => 'boole',
+        'widget' => 'Select',
+        'options' => array(
+            '不启用','启用'
+        ),
+        'error' => '',
+        'validate' => array(),
+        'attributes' => array(
+            'class' => 'form-control',
+        ),
+    ),
     'number' => array(
         'label' => '内容类型列表数量',
         'userOptions' => array(),

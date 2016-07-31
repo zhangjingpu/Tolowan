@@ -2,6 +2,6 @@
 $settings = array(
     'term' => array(
         'entity' => 'Modules\Taxonomy\Entity\Term',
-        'columns' => array('term_id'=>'term.id', 'term.name','term.type', 'term.description', 'term.parent', 'term.widget', 'term.attach'),
+        'columns' => array('id'=>'term.id', 'term.name', 'term.description','term.parent','term.widget','term.other','term.contentModel','term.attach','term.changed','term.created'),
     ),
 );

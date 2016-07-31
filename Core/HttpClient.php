@@ -176,13 +176,12 @@ class HttpClient
         }
 
         $arrURL = parse_url($url);
-
         if (empty($url) || empty($arrURL['scheme'])) {
-            return new Error('http_request_failed', __('A valid URL was not provided.'));
+            return new Error('http_request_failed', 'A valid URL was not provided.');
         }
 
         if ($this->block_request($url)) {
-            return new Error('http_request_failed', __('User has blocked requests through HTTP.'));
+            return new Error('http_request_failed', 'User has blocked requests through HTTP.');
         }
 
         // Determine if this is a https call and pass that on to the transport functions
@@ -323,7 +322,7 @@ class HttpClient
 
         $class = $this->_get_first_available_transport($args, $url);
         if (!$class) {
-            return new Error('http_failure', __('There are no HTTP transports available which can complete the requested request.'));
+            return new Error('http_failure', 'There are no HTTP transports available which can complete the requested request.');
         }
 
         // Transport claims to support request, instantiate it and give it a whirl.

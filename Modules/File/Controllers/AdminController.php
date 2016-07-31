@@ -6,6 +6,7 @@ use Core\Db\Query;
 use Core\File;
 use Core\Mvc\Controller;
 use Modules\File\Models\File as FileModel;
+use Phalcon\Paginator\Adapter\Model as PaginatorModel;
 
 /**
  */
@@ -17,13 +18,7 @@ class AdminController extends Controller
     public function indexAction()
     {
         extract($this->variables['router_params']);
-        $query = array(
-            'from' => 'file',
-            'paginator' => true,
-            'page' => $page,
-            'limit' => 30,
-            'andWhere' => array(),
-        );
+        $query = array();
         $contentType = Config::get('contentType');
         $params = $this->request->getQuery();
         if (isset($params['content_type']) && isset($contentType[$params['content_type']])) {
@@ -32,7 +27,15 @@ class AdminController extends Controller
             $type = 'all';
         }
         $query = $this->_filterQuery($query);
-        $data = Query::find($query);
+        $results = FileModel::find($query);
+        $data   = new PaginatorModel(
+            array(
+                "data"  => $results,
+                "limit" => 10,
+                "page"  => $page
+            )
+        );
+
         $this->variables += array(
             'title' => strtoupper($type) . ' 列表',
             'description' => '第' . $page . '页',
@@ -74,7 +77,7 @@ class AdminController extends Controller
                         'file-manage',
                         'file-manage-' . $type,
                     ),
-                    'data' => $data,
+                    'data' => $data->getPaginate(),
                 ),
             ),
         );
@@ -83,32 +86,28 @@ class AdminController extends Controller
     protected function _filterQuery($query)
     {
         $params = $this->request->getQuery();
+        $temQuery = array('conditions'=>'','bind'=>array());
         foreach (array('state', 'access') as $value) {
-            if (isset($params[$value]) && $params[$value]) {
-                $params[$value] = intval($params[$value]);
-                $query['andWhere'][] = array(
-                    'conditions' => "file.$value = :$value:",
-                    'bind' => array($value => $params[$value]),
-                );
+            if (isset($params[$value])) {
+                $temQuery['conditions'][] = "$value = :$value:";
+                $temQuery['bind'][$value] = ntval($params[$value]);
             }
         }
         if (isset($params['content_type'])) {
             $contentType = Config::get('contentType');
             if (isset($contentType[$params['content_type']])) {
-                $query['andWhere'][] = array(
-                    'conditions' => 'file.content_type = :content_type:',
-                    'bind' => array('content_type' => $params['content_type']),
-                );
+                $temQuery['conditions'][] = 'content_type = :content_type:';
+                $temQuery['bind']['content_type'] = $params['content_type'];
             }
         }
+        $query['conditions'] = implode(' AND ',$temQuery['conditions']);
+        $query['bind'] = $temQuery;
         return $query;
     }
     public function deleteAction()
     {
         extract($this->variables['router_params']);
-        $this->variables = array(
-            '#templates' => 'pageJson',
-        );
+        $this->variables['#templates'] = 'json';
         $file = FileModel::findFirst($id);
         if (!$file) {
             $this->variables['data'] = json_encode(array(

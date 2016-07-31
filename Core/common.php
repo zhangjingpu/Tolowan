@@ -26,7 +26,21 @@ function getVar($data, $varName, $default = null)
     }
     return $default;
 }
-
+//字段数据初始化
+function fieldsInit($fields)
+{
+    $output = array();
+    foreach ($fields as $key => $field){
+        if(isset($field['field'])){
+            if($field['field'] == 'groupTabs' || $field['field'] == 'group'){
+                $output += fieldsInit($field['group']);
+            }else{
+                $output[$key] = $field;
+            }
+        }
+    }
+    return $output;
+}
 //转换附加属性成字符串
 function renderAttributes($attributes)
 {
@@ -39,7 +53,18 @@ function renderAttributes($attributes)
     }
     return implode(' ', $output);
 }
-
+//合并上数组
+function userArrayMerge($one, $two)
+{
+    foreach ($two as $key => $value) {
+        if (isset($one[$key]) && is_array($one[$key]) && is_array($value)) {
+            $one[$key] = userArrayMerge($one[$key], $value);
+        } else {
+            $one[$key] = $value;
+        }
+    }
+    return $one;
+}
 //转换时间
 function timeTran($the_time)
 {
@@ -105,12 +130,19 @@ function subString($string, $length, $stripTags = false, $start = 0)
 }
 
 //获取不带参数的当前地址
-function staticUrl($params = array())
+function staticUrl($params = array(),$mergeQuery = true)
 {
     global $di;
     $urlName = $di->getShared('router')->getMatchedRoute()->getName();
     $urlParams = $di->getShared('router')->getParams();
     $urlParams['for'] = $urlName;
+    if($mergeQuery === true && !empty($params)){
+        $query = $di->getShared('request')->getQuery();
+        if(isset($query['_url'])){
+            unset($query['_url']);
+        }
+        $params = array_merge($query,$params);
+    }
     return $di->getShared('url')->get($urlParams, $params);
 }
 

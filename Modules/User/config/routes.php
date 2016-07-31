@@ -10,32 +10,22 @@ $settings = array(
             'namespace' => 'Modules\User\Controllers',
         ),
     ),
-    'userManager' => array(
-        'httpMethods' => 'GET',
-        'pattern' => '/user',
-        'paths' => array(
-            'controller' => 'Index',
-            'action' => 'Manager',
-            'module' => 'user',
-            'namespace' => 'Modules\User\Controllers',
-        ),
-    ),
-    'userCropImage' => array(
-        'httpMethods' => null,
-        'pattern' => '/user/crop_image',
-        'paths' => array(
-            'controller' => 'Index',
-            'action' => 'cropImage',
-            'module' => 'user',
-            'namespace' => 'Modules\User\Controllers',
-        ),
-    ),
     'userCenterIndex' => array(
         'httpMethods' => 'GET',
         'pattern' => '/user_center/index',
         'paths' => array(
-            'controller' => 'Index',
-            'action' => 'userCenter',
+            'controller' => 'User',
+            'action' => 'index',
+            'module' => 'user',
+            'namespace' => 'Modules\User\Controllers',
+        ),
+    ),
+    'userCenterCropFace' => array(
+        'httpMethods' => null,
+        'pattern' => '/user_center/crop_face',
+        'paths' => array(
+            'controller' => 'User',
+            'action' => 'cropFace',
             'module' => 'user',
             'namespace' => 'Modules\User\Controllers',
         ),

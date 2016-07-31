@@ -35,12 +35,16 @@ class Queue
     //开始执行任务
     public static function start()
     {
-        if (self::isStart() === false) {
+        if (self::isStart() === true) {
             return 2;
         }
         global $di;
         $http = new HttpClient();
-        $http->request($di->getShared('url')->get(array('for' => 'queue','id'=>0)), array(
+        $scheme = $di->getShared('request')->getServer('REQUEST_SCHEME');
+        $host = $di->getShared('request')->getServer('HTTP_HOST');
+        $url = $di->getShared('url')->get(array('for' => 'queue','id'=>0));
+        $url = $scheme.'://'.$host.$url;
+        $http->request($url, array(
             'stream' => true,
             'blocking' => false,
             'timeout' => 0,

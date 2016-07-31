@@ -21,22 +21,24 @@ $settings = array(
         'description' => '',
         'field' => 'string',
         'widget' => 'Select',
-        'options' => array(),
+        'options' => array(
+            'null' => '不限制'
+        ),
         'validate' => array(),
         'attributes' => array(
             'class' => 'form-control',
         ),
-        'required' => true,
+        'required' => false,
     ),
     'state' => array(
         'label' => '状态',
         'error' => '',
         'userOptions' => array(),
         'description' => '',
-        'field' => 'number',
+        'field' => 'string',
         'widget' => 'Select',
         'options' => array(
-            0 => '不限制',
+            'null' => '不限制',
             1 => '正常',
             2 => '回收站',
             3 => '待审核',
@@ -45,16 +47,17 @@ $settings = array(
         'attributes' => array(
             'class' => 'form-control',
         ),
-        'required' => true,
+        'required' => false,
     ),
     'top' => array(
         'label' => '置顶',
         'error' => '',
         'userOptions' => array(),
         'description' => '',
-        'field' => 'boole',
+        'field' => 'string',
         'widget' => 'Select',
         'options' => array(
+            'null' => '不限制',
             '非置顶',
             '置顶',
         ),
@@ -62,16 +65,17 @@ $settings = array(
         'attributes' => array(
             'class' => 'form-control',
         ),
-        'required' => true,
+        'required' => false,
     ),
     'essence' => array(
         'label' => '精华',
         'error' => '',
         'userOptions' => array(),
         'description' => '',
-        'field' => 'boole',
+        'field' => 'string',
         'widget' => 'Select',
         'options' => array(
+            'null' => '不限制',
             '非精华',
             '精华',
         ),
@@ -79,16 +83,17 @@ $settings = array(
         'attributes' => array(
             'class' => 'form-control',
         ),
-        'required' => true,
+        'required' => false,
     ),
     'hot' => array(
         'label' => '热点',
         'error' => '',
         'userOptions' => array(),
         'description' => '',
-        'field' => 'boole',
+        'field' => 'string',
         'widget' => 'Select',
         'options' => array(
+            'null' => '不限制',
             '非热点',
             '热点',
         ),
@@ -96,18 +101,28 @@ $settings = array(
         'attributes' => array(
             'class' => 'form-control',
         ),
-        'required' => true,
+        'required' => false,
+    ),
+    'uid' => array(
+        'label' => '用户',
+        'error' => '',
+        'userOptions' => array(),
+        'description' => '',
+        'field' => 'number',
+        'widget' => 'Text',
+        'validate' => array(),
+        'attributes' => array(
+            'class' => 'form-control',
+        ),
+        'required' => false,
     ),
     'settings' => array(
         'checkToken' => false,
         'validation' => true,
     ),
 );
-$output = array();
 foreach (Di::getDefault()->getEntityManager()->get('node')->getContentModelList() as $key => $value) {
-    $output[$key] = $value['modelName'];
+    $settings['contentModel']['options'][$key] = $value['modelName'];
 }
-$settings['contentModel']['options'] = $output;
-unset($output);
 unset($key);
 unset($value);

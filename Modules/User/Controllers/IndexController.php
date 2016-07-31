@@ -11,14 +11,14 @@ class IndexController extends Controller
     public function indexAction()
     {
         extract($this->variables['router_params']);
-        $this->variables['title'] = '用户主页';
-        $this->variables['description'] = '用户个人主页';
-        $this->variables['keywords'] = '用户个人主页';
         $userEntity = $this->entityManager->get('user');
         $user = $userEntity->findFirst($id, true);
         if (!$user) {
             return $this->getNotFount();
         }
+        $this->variables['title'] = $user->name.' 的主页';
+        $this->variables['description'] = $user->name.' 的主页';
+        $this->variables['keywords'] = $user->name;
         $this->variables += [
             '#templates' => 'pageUser',
             'data' => $user,
@@ -28,10 +28,11 @@ class IndexController extends Controller
     public function userCenterAction()
     {
         extract($this->variables['router_params']);
-        $userCenterForm = Config::get('user.baseInfoForm');
-        $userCenterForm = $this->form->create($userCenterForm);
-        $this->variables['page'] = [
-            '#templates' => 'userCenterIndex',
+        $userEntity = $this->entityManager->get('user');
+        $user = $nodeEntity->findFirst($this->user->id, true);
+        $userCenterForm = $this->form->create('user.baseInfoForm');
+        $this->variables += [
+            '#templates' => 'pageUserCenterIndex',
             'title' => '用户中心-个人资料',
             'description' => '用户中心-个人资料',
             'key' => '用户中心',
@@ -57,18 +58,6 @@ class IndexController extends Controller
         echo json_encode(['valid' => $valid]);
     }
 
-    public function cropImageAction()
-    {
-        extract($this->variables['router_params']);
-        $postData = $this->request->getPost();
-        $this->variables['page'] = [
-            '#templates' => 'pageNoWrapper',
-        ];
-        Config::printCode(json_decode($postData['avatar_src']));
-        $aa = json_decode($postData['avatar_data']);
-        Config::printCode($aa);
-    }
-
     public function managerAction()
     {
         extract($this->variables['router_params']);
@@ -79,7 +68,8 @@ class IndexController extends Controller
     {
         extract($this->variables['router_params']);
         if ($this->user->isLogin() === true) {
-            $this->temMoved(['for' => 'index']);
+            $this->flash->success('已经登出，更换账户请退出后登陆');
+            return $this->temMoved(['for' => 'index']);
         }
         $this->variables['keywords'] = $this->variables['description'] = $this->variables['title'] = '用户登陆';
         $loginForm = Config::get('user.loginForm');
@@ -87,7 +77,7 @@ class IndexController extends Controller
         if ($loginForm->isValid()) {
             $state = $loginForm->save();
             if ($state !== false) {
-                return $this->temMoved(array('for' => 'index'));
+                return $this->temMoved();
             }
         }
         $this->variables += [
